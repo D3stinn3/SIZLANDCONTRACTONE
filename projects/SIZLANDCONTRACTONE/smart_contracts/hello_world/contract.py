@@ -58,49 +58,51 @@ class SizlandVestingContract(ARC4Contract):
         )
 
     @arc4.abimethod
-    def claim(self, key: arc4.UInt64) -> None:
-        current_time = Global.latest_timestamp  # Use native UInt64 directly
+    def claim(self) -> None:
         sender = Txn.sender
+        current_time = Global.latest_timestamp  # Already a native UInt64
 
         # Check allocation exists
         assert sender in self.allocations, "No allocation found"
-        allocation = self.allocations[sender].copy()  # safe struct access
 
-        # Enforce cliff
-        assert current_time >= allocation.cliff_time.native, "Cliff not reached"
+        # Copy and access struct fields
+        allocation = self.allocations[sender].copy()
 
-        # Optional cooldown
-        assert (
-            current_time - allocation.last_claim_time.native >= 10
-        ), "Wait before claiming again"
+        # Native conversions
+        last_claim_time = allocation.last_claim_time.native
+        cliff_time = allocation.cliff_time.native
+        start_time = allocation.start_time.native
+        vesting_period = allocation.vesting_period.native
+        claimed_amount = allocation.claimed_amount.native
+        total_allocation = allocation.total_allocation.native
 
-        # Calculate vesting
-        end_time = allocation.start_time.native + allocation.vesting_period.native
+        # Enforce cliff and cooldown
+        assert current_time >= cliff_time, "Cliff not reached"
+        assert current_time - last_claim_time >= 10, "Wait before claiming again"
+
+        # Compute vesting
+        end_time = start_time + vesting_period
         if current_time >= end_time:
-            vested = allocation.total_allocation.native
+            vested = total_allocation
         else:
-            elapsed = current_time - allocation.start_time.native
-            vested = (
-                allocation.total_allocation.native * elapsed
-            ) // allocation.vesting_period.native
+            elapsed = current_time - start_time
+            vested = (total_allocation * elapsed) // vesting_period
 
         # Compute claimable amount
-        claimable = vested - allocation.claimed_amount.native
+        claimable = vested - claimed_amount
         assert claimable > 0, "Nothing to claim"
 
-        # Transfer claimable ASA
+        # Transfer ASA
         itxn.AssetTransfer(
-            asset_receiver=sender,
-            asset_amount=claimable,
-            xfer_asset=self.asa,
+            asset_receiver=sender, asset_amount=claimable, xfer_asset=self.asa
         ).submit()
 
-        # Update allocation
+        # Update allocation in BoxMap
         self.allocations[sender] = UserAllocation(
-            total_allocation=allocation.total_allocation,
-            claimed_amount=arc4.UInt64(allocation.claimed_amount.native + claimable),
-            start_time=allocation.start_time,
-            cliff_time=allocation.cliff_time,
-            vesting_period=allocation.vesting_period,
+            total_allocation=arc4.UInt64(total_allocation),
+            claimed_amount=arc4.UInt64(claimed_amount + claimable),
+            start_time=arc4.UInt64(start_time),
+            cliff_time=arc4.UInt64(cliff_time),
+            vesting_period=arc4.UInt64(vesting_period),
             last_claim_time=arc4.UInt64(current_time),
         )
