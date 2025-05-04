@@ -1,0 +1,255 @@
+#pragma version 10
+#pragma typetrack false
+
+// smart_contracts.hello_world.contract.SizlandVestingContract.__algopy_entrypoint_with_init() -> uint64:
+main:
+    intcblock 0 1
+    bytecblock "asa" 0x0000000000000000
+    txn ApplicationID
+    bnz main_after_if_else@2
+    // smart_contracts/hello_world/contract.py:19-21
+    // # Initialize your contract state
+    // # This will be executed once on deployment
+    // self.asa = Asset()
+    bytec_0 // "asa"
+    intc_0 // 0
+    app_global_put
+
+main_after_if_else@2:
+    // smart_contracts/hello_world/contract.py:14
+    // class SizlandVestingContract(ARC4Contract):
+    txn NumAppArgs
+    bz main_bare_routing@8
+    pushbytess 0x2826b202 0x6e59b7ad 0xf1577726 // method "opt_into_asset(asset)void", method "set_allocation(account,uint64,uint64,uint64,uint64)void", method "claim()void"
+    txna ApplicationArgs 0
+    match main_opt_into_asset_route@5 main_set_allocation_route@6 main_claim_route@7
+
+main_after_if_else@10:
+    // smart_contracts/hello_world/contract.py:14
+    // class SizlandVestingContract(ARC4Contract):
+    intc_0 // 0
+    return
+
+main_claim_route@7:
+    // smart_contracts/hello_world/contract.py:60
+    // @arc4.abimethod
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    callsub claim
+    intc_1 // 1
+    return
+
+main_set_allocation_route@6:
+    // smart_contracts/hello_world/contract.py:39
+    // @arc4.abimethod
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/hello_world/contract.py:14
+    // class SizlandVestingContract(ARC4Contract):
+    txna ApplicationArgs 1
+    btoi
+    txnas Accounts
+    txna ApplicationArgs 2
+    txna ApplicationArgs 3
+    txna ApplicationArgs 4
+    txna ApplicationArgs 5
+    // smart_contracts/hello_world/contract.py:39
+    // @arc4.abimethod
+    callsub set_allocation
+    intc_1 // 1
+    return
+
+main_opt_into_asset_route@5:
+    // smart_contracts/hello_world/contract.py:24
+    // @arc4.abimethod
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/hello_world/contract.py:14
+    // class SizlandVestingContract(ARC4Contract):
+    txna ApplicationArgs 1
+    btoi
+    txnas Assets
+    // smart_contracts/hello_world/contract.py:24
+    // @arc4.abimethod
+    callsub opt_into_asset
+    intc_1 // 1
+    return
+
+main_bare_routing@8:
+    // smart_contracts/hello_world/contract.py:14
+    // class SizlandVestingContract(ARC4Contract):
+    txn OnCompletion
+    bnz main_after_if_else@10
+    txn ApplicationID
+    !
+    assert // can only call when creating
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.SizlandVestingContract.opt_into_asset(asset: uint64) -> void:
+opt_into_asset:
+    // smart_contracts/hello_world/contract.py:24-25
+    // @arc4.abimethod
+    // def opt_into_asset(self, asset: Asset) -> None:
+    proto 1 0
+    // smart_contracts/hello_world/contract.py:26-27
+    // # Only allow app creator to opt the app account into a ASA
+    // assert Txn.sender == Global.creator_address, "Only creator can opt in to ASA"
+    txn Sender
+    global CreatorAddress
+    ==
+    assert // Only creator can opt in to ASA
+    // smart_contracts/hello_world/contract.py:28-29
+    // # Verify a ASA hasn't already been opted into
+    // assert self.asa.id == 2905622564, "ASA already opted in"
+    intc_0 // 0
+    bytec_0 // "asa"
+    app_global_get_ex
+    assert // check self.asa exists
+    pushint 2905622564 // 2905622564
+    ==
+    assert // ASA already opted in
+    // smart_contracts/hello_world/contract.py:30-31
+    // # Save ASA ID in global state
+    // self.asa = asset
+    bytec_0 // "asa"
+    frame_dig -1
+    app_global_put
+    // smart_contracts/hello_world/contract.py:33-37
+    // # Submit opt-in transaction: 0 asset transfer to self
+    // itxn.AssetTransfer(
+    //     asset_receiver=Global.current_application_address,
+    //     xfer_asset=asset,
+    // ).submit()
+    itxn_begin
+    // smart_contracts/hello_world/contract.py:35
+    // asset_receiver=Global.current_application_address,
+    global CurrentApplicationAddress
+    frame_dig -1
+    itxn_field XferAsset
+    itxn_field AssetReceiver
+    // smart_contracts/hello_world/contract.py:33-34
+    // # Submit opt-in transaction: 0 asset transfer to self
+    // itxn.AssetTransfer(
+    pushint 4 // axfer
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/hello_world/contract.py:33-37
+    // # Submit opt-in transaction: 0 asset transfer to self
+    // itxn.AssetTransfer(
+    //     asset_receiver=Global.current_application_address,
+    //     xfer_asset=asset,
+    // ).submit()
+    itxn_submit
+    retsub
+
+
+// smart_contracts.hello_world.contract.SizlandVestingContract.set_allocation(beneficiary: bytes, total_allocation: bytes, start_time: bytes, cliff_time: bytes, vesting_period: bytes) -> void:
+set_allocation:
+    // smart_contracts/hello_world/contract.py:39-47
+    // @arc4.abimethod
+    // def set_allocation(
+    //     self,
+    //     beneficiary: Account,
+    //     total_allocation: arc4.UInt64,
+    //     start_time: arc4.UInt64,
+    //     cliff_time: arc4.UInt64,
+    //     vesting_period: arc4.UInt64,
+    // ) -> None:
+    proto 5 0
+    // smart_contracts/hello_world/contract.py:49
+    // Txn.sender == Global.creator_address
+    txn Sender
+    global CreatorAddress
+    ==
+    // smart_contracts/hello_world/contract.py:48-50
+    // assert (
+    //     Txn.sender == Global.creator_address
+    // ), "Only the creator can call this method"
+    assert // Only the creator can call this method
+    // smart_contracts/hello_world/contract.py:51-58
+    // self.allocations[beneficiary] = UserAllocation(
+    //     total_allocation=total_allocation,
+    //     claimed_amount=arc4.UInt64(0),
+    //     start_time=start_time,
+    //     cliff_time=cliff_time,
+    //     vesting_period=vesting_period,
+    //     last_claim_time=arc4.UInt64(0),
+    // )
+    frame_dig -4
+    // smart_contracts/hello_world/contract.py:53
+    // claimed_amount=arc4.UInt64(0),
+    bytec_1 // 0x0000000000000000
+    // smart_contracts/hello_world/contract.py:51-58
+    // self.allocations[beneficiary] = UserAllocation(
+    //     total_allocation=total_allocation,
+    //     claimed_amount=arc4.UInt64(0),
+    //     start_time=start_time,
+    //     cliff_time=cliff_time,
+    //     vesting_period=vesting_period,
+    //     last_claim_time=arc4.UInt64(0),
+    // )
+    concat
+    frame_dig -3
+    concat
+    frame_dig -2
+    concat
+    frame_dig -1
+    concat
+    // smart_contracts/hello_world/contract.py:57
+    // last_claim_time=arc4.UInt64(0),
+    bytec_1 // 0x0000000000000000
+    // smart_contracts/hello_world/contract.py:51-58
+    // self.allocations[beneficiary] = UserAllocation(
+    //     total_allocation=total_allocation,
+    //     claimed_amount=arc4.UInt64(0),
+    //     start_time=start_time,
+    //     cliff_time=cliff_time,
+    //     vesting_period=vesting_period,
+    //     last_claim_time=arc4.UInt64(0),
+    // )
+    concat
+    frame_dig -5
+    swap
+    box_put
+    retsub
+
+
+// smart_contracts.hello_world.contract.SizlandVestingContract.claim() -> void:
+claim:
+    // smart_contracts/hello_world/contract.py:62
+    // current_time = arc4.UInt64(Global.latest_timestamp)
+    global LatestTimestamp
+    itob
+    // smart_contracts/hello_world/contract.py:63
+    // sender = Txn.sender
+    txn Sender
+    // smart_contracts/hello_world/contract.py:65-66
+    // # Check allocation exists
+    // assert sender in self.allocations, "No allocation found"
+    dup
+    box_len
+    bury 1
+    assert // No allocation found
+    // smart_contracts/hello_world/contract.py:67
+    // allocation = self.allocations[sender].copy()  # safe struct access
+    box_get
+    assert // check self.allocations entry exists
+    // smart_contracts/hello_world/contract.py:69-70
+    // # Enforce cliff
+    // assert current_time >= allocation.cliff_time, "Cliff not reached"
+    extract 24 8 // on error: Index access is out of bounds
+    b>=
+    assert // Cliff not reached
+    retsub
