@@ -58,8 +58,8 @@ class SizlandVestingContract(ARC4Contract):
         )
 
     @arc4.abimethod
-    def claim(self) -> None:
-        current_time = arc4.UInt64(Global.latest_timestamp)
+    def claim(self, key: arc4.UInt64) -> None:
+        current_time = Global.latest_timestamp  # Use native UInt64 directly
         sender = Txn.sender
 
         # Check allocation exists
@@ -67,4 +67,40 @@ class SizlandVestingContract(ARC4Contract):
         allocation = self.allocations[sender].copy()  # safe struct access
 
         # Enforce cliff
-        assert current_time >= allocation.cliff_time, "Cliff not reached"
+        assert current_time >= allocation.cliff_time.native, "Cliff not reached"
+
+        # Optional cooldown
+        assert (
+            current_time - allocation.last_claim_time.native >= 10
+        ), "Wait before claiming again"
+
+        # Calculate vesting
+        end_time = allocation.start_time.native + allocation.vesting_period.native
+        if current_time >= end_time:
+            vested = allocation.total_allocation.native
+        else:
+            elapsed = current_time - allocation.start_time.native
+            vested = (
+                allocation.total_allocation.native * elapsed
+            ) // allocation.vesting_period.native
+
+        # Compute claimable amount
+        claimable = vested - allocation.claimed_amount.native
+        assert claimable > 0, "Nothing to claim"
+
+        # Transfer claimable ASA
+        itxn.AssetTransfer(
+            asset_receiver=sender,
+            asset_amount=claimable,
+            xfer_asset=self.asa,
+        ).submit()
+
+        # Update allocation
+        self.allocations[sender] = UserAllocation(
+            total_allocation=allocation.total_allocation,
+            claimed_amount=arc4.UInt64(allocation.claimed_amount.native + claimable),
+            start_time=allocation.start_time,
+            cliff_time=allocation.cliff_time,
+            vesting_period=allocation.vesting_period,
+            last_claim_time=arc4.UInt64(current_time),
+        )

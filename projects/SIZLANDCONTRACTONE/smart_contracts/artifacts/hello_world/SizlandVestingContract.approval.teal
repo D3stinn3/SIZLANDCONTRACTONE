@@ -3,7 +3,7 @@
 
 // smart_contracts.hello_world.contract.SizlandVestingContract.__algopy_entrypoint_with_init() -> uint64:
 main:
-    intcblock 0 1
+    intcblock 0 1 4
     bytecblock "asa" 0x0000000000000000
     txn ApplicationID
     bnz main_after_if_else@2
@@ -20,7 +20,7 @@ main_after_if_else@2:
     // class SizlandVestingContract(ARC4Contract):
     txn NumAppArgs
     bz main_bare_routing@8
-    pushbytess 0x2826b202 0x6e59b7ad 0xf1577726 // method "opt_into_asset(asset)void", method "set_allocation(account,uint64,uint64,uint64,uint64)void", method "claim()void"
+    pushbytess 0x2826b202 0x6e59b7ad 0x3d1d2f0f // method "opt_into_asset(asset)void", method "set_allocation(account,uint64,uint64,uint64,uint64)void", method "claim(uint64)void"
     txna ApplicationArgs 0
     match main_opt_into_asset_route@5 main_set_allocation_route@6 main_claim_route@7
 
@@ -38,6 +38,11 @@ main_claim_route@7:
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
+    // smart_contracts/hello_world/contract.py:14
+    // class SizlandVestingContract(ARC4Contract):
+    txna ApplicationArgs 1
+    // smart_contracts/hello_world/contract.py:60
+    // @arc4.abimethod
     callsub claim
     intc_1 // 1
     return
@@ -141,7 +146,7 @@ opt_into_asset:
     // smart_contracts/hello_world/contract.py:33-34
     // # Submit opt-in transaction: 0 asset transfer to self
     // itxn.AssetTransfer(
-    pushint 4 // axfer
+    intc_2 // axfer
     itxn_field TypeEnum
     intc_0 // 0
     itxn_field Fee
@@ -226,15 +231,22 @@ set_allocation:
     retsub
 
 
-// smart_contracts.hello_world.contract.SizlandVestingContract.claim() -> void:
+// smart_contracts.hello_world.contract.SizlandVestingContract.claim(key: bytes) -> void:
 claim:
+    // smart_contracts/hello_world/contract.py:60-61
+    // @arc4.abimethod
+    // def claim(self, key: arc4.UInt64) -> None:
+    proto 1 0
     // smart_contracts/hello_world/contract.py:62
-    // current_time = arc4.UInt64(Global.latest_timestamp)
+    // current_time = Global.latest_timestamp  # Use native UInt64 directly
     global LatestTimestamp
-    itob
     // smart_contracts/hello_world/contract.py:63
     // sender = Txn.sender
     txn Sender
+    // smart_contracts/hello_world/contract.py:62-63
+    // current_time = Global.latest_timestamp  # Use native UInt64 directly
+    // sender = Txn.sender
+    dup2
     // smart_contracts/hello_world/contract.py:65-66
     // # Check allocation exists
     // assert sender in self.allocations, "No allocation found"
@@ -245,11 +257,172 @@ claim:
     // smart_contracts/hello_world/contract.py:67
     // allocation = self.allocations[sender].copy()  # safe struct access
     box_get
+    swap
+    dup
+    cover 2
+    cover 3
     assert // check self.allocations entry exists
     // smart_contracts/hello_world/contract.py:69-70
     // # Enforce cliff
-    // assert current_time >= allocation.cliff_time, "Cliff not reached"
+    // assert current_time >= allocation.cliff_time.native, "Cliff not reached"
+    dup
     extract 24 8 // on error: Index access is out of bounds
-    b>=
+    cover 2
+    dup
+    pushint 24 // 24
+    extract_uint64
+    dig 2
+    <=
     assert // Cliff not reached
+    // smart_contracts/hello_world/contract.py:74
+    // current_time - allocation.last_claim_time.native >= 10
+    dup
+    pushint 40 // 40
+    extract_uint64
+    dig 2
+    swap
+    -
+    pushint 10 // 10
+    >=
+    // smart_contracts/hello_world/contract.py:72-75
+    // # Optional cooldown
+    // assert (
+    //     current_time - allocation.last_claim_time.native >= 10
+    // ), "Wait before claiming again"
+    assert // Wait before claiming again
+    // smart_contracts/hello_world/contract.py:77-78
+    // # Calculate vesting
+    // end_time = allocation.start_time.native + allocation.vesting_period.native
+    dup
+    extract 16 8 // on error: Index access is out of bounds
+    cover 2
+    dup
+    pushint 16 // 16
+    extract_uint64
+    dup
+    cover 2
+    cover 3
+    dup
+    extract 32 8 // on error: Index access is out of bounds
+    cover 3
+    pushint 32 // 32
+    extract_uint64
+    dup
+    cover 3
+    +
+    // smart_contracts/hello_world/contract.py:79
+    // if current_time >= end_time:
+    >=
+    bz claim_else_body@2
+    // smart_contracts/hello_world/contract.py:80
+    // vested = allocation.total_allocation.native
+    frame_dig 2
+    intc_0 // 0
+    extract_uint64
+
+claim_after_if_else@3:
+    // smart_contracts/hello_world/contract.py:87-88
+    // # Compute claimable amount
+    // claimable = vested - allocation.claimed_amount.native
+    frame_dig 2
+    dup
+    pushint 8 // 8
+    extract_uint64
+    uncover 2
+    dig 1
+    -
+    // smart_contracts/hello_world/contract.py:89
+    // assert claimable > 0, "Nothing to claim"
+    dup
+    assert // Nothing to claim
+    // smart_contracts/hello_world/contract.py:91-96
+    // # Transfer claimable ASA
+    // itxn.AssetTransfer(
+    //     asset_receiver=sender,
+    //     asset_amount=claimable,
+    //     xfer_asset=self.asa,
+    // ).submit()
+    itxn_begin
+    // smart_contracts/hello_world/contract.py:95
+    // xfer_asset=self.asa,
+    intc_0 // 0
+    bytec_0 // "asa"
+    app_global_get_ex
+    assert // check self.asa exists
+    itxn_field XferAsset
+    dup
+    itxn_field AssetAmount
+    frame_dig 1
+    dup
+    cover 4
+    itxn_field AssetReceiver
+    // smart_contracts/hello_world/contract.py:91-92
+    // # Transfer claimable ASA
+    // itxn.AssetTransfer(
+    intc_2 // axfer
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/hello_world/contract.py:91-96
+    // # Transfer claimable ASA
+    // itxn.AssetTransfer(
+    //     asset_receiver=sender,
+    //     asset_amount=claimable,
+    //     xfer_asset=self.asa,
+    // ).submit()
+    itxn_submit
+    // smart_contracts/hello_world/contract.py:100
+    // total_allocation=allocation.total_allocation,
+    uncover 2
+    extract 0 8 // on error: Index access is out of bounds
+    // smart_contracts/hello_world/contract.py:101
+    // claimed_amount=arc4.UInt64(allocation.claimed_amount.native + claimable),
+    cover 2
+    +
+    itob
+    // smart_contracts/hello_world/contract.py:105
+    // last_claim_time=arc4.UInt64(current_time),
+    frame_dig 0
+    itob
+    // smart_contracts/hello_world/contract.py:98-106
+    // # Update allocation
+    // self.allocations[sender] = UserAllocation(
+    //     total_allocation=allocation.total_allocation,
+    //     claimed_amount=arc4.UInt64(allocation.claimed_amount.native + claimable),
+    //     start_time=allocation.start_time,
+    //     cliff_time=allocation.cliff_time,
+    //     vesting_period=allocation.vesting_period,
+    //     last_claim_time=arc4.UInt64(current_time),
+    // )
+    cover 2
+    concat
+    frame_dig 4
+    concat
+    frame_dig 3
+    concat
+    frame_dig 6
+    concat
+    swap
+    concat
+    box_put
     retsub
+
+claim_else_body@2:
+    // smart_contracts/hello_world/contract.py:82
+    // elapsed = current_time - allocation.start_time.native
+    frame_dig 0
+    frame_dig 5
+    -
+    // smart_contracts/hello_world/contract.py:84
+    // allocation.total_allocation.native * elapsed
+    frame_dig 2
+    intc_0 // 0
+    extract_uint64
+    *
+    // smart_contracts/hello_world/contract.py:83-85
+    // vested = (
+    //     allocation.total_allocation.native * elapsed
+    // ) // allocation.vesting_period.native
+    frame_dig 7
+    /
+    b claim_after_if_else@3
