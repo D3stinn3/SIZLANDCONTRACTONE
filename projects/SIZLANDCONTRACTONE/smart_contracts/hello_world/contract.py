@@ -60,8 +60,49 @@ class SizlandVestingContract(ARC4Contract):
     @arc4.abimethod
     def claim(self) -> None:
         current_time = arc4.UInt64(Global.latest_timestamp)
-
         sender = Txn.sender
 
         allocation, exists = self.allocations.maybe(sender)
         assert exists, "No allocation found"
+
+        # Check if cliff has passed
+        assert current_time >= allocation.cliff_time, "Cliff not reached"
+
+        # Optional: Enforce cooldown period (e.g. 10 seconds between claims)
+        assert current_time - allocation.last_claim_time >= arc4.UInt64(
+            10
+        ), "Wait before claiming again"
+
+        # Calculate how much is vested
+        end_time = allocation.start_time + allocation.vesting_period
+
+        if current_time >= end_time:
+            # Fully vested
+            vested_amount = allocation.total_allocation
+        else:
+            # Linear vesting
+            elapsed = current_time - allocation.start_time
+            vested_amount = (
+                allocation.total_allocation * elapsed
+            ) // allocation.vesting_period
+
+        # Calculate how much is claimable
+        claimable = vested_amount - allocation.claimed_amount
+        assert claimable > 0, "Nothing to claim"
+
+        # Transfer ASA to user
+        itxn.AssetTransfer(
+            asset_receiver=sender,
+            asset_amount=claimable,
+            xfer_asset=self.asa,
+        ).submit()
+
+        # Update allocation
+        self.allocations[sender] = UserAllocation(
+            total_allocation=allocation.total_allocation,
+            claimed_amount=allocation.claimed_amount + claimable,
+            start_time=allocation.start_time,
+            cliff_time=allocation.cliff_time,
+            vesting_period=allocation.vesting_period,
+            last_claim_time=current_time,
+        )
