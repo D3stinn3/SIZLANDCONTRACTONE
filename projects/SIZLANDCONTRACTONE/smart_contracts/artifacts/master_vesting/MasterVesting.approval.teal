@@ -7,19 +7,19 @@ main:
     bytecblock "contract_count" "asa" "contracts"
     txn ApplicationID
     bnz main_after_if_else@2
-    // smart_contracts/master_vesting/contract.py:18
+    // smart_contracts/master_vesting/contract.py:8
     // self.contract_count = arc4.UInt64(0)
     bytec_0 // "contract_count"
     pushbytes 0x0000000000000000
     app_global_put
-    // smart_contracts/master_vesting/contract.py:19
+    // smart_contracts/master_vesting/contract.py:9
     // self.asa = Asset()
     bytec_1 // "asa"
     intc_0 // 0
     app_global_put
 
 main_after_if_else@2:
-    // smart_contracts/master_vesting/contract.py:14
+    // smart_contracts/master_vesting/contract.py:4
     // class MasterVesting(ARC4Contract):
     txn NumAppArgs
     bz main_bare_routing@8
@@ -28,42 +28,42 @@ main_after_if_else@2:
     match main_register_vesting_contract_route@5 main_get_vesting_contract_route@6 main_opt_into_asset_route@7
 
 main_after_if_else@10:
-    // smart_contracts/master_vesting/contract.py:14
+    // smart_contracts/master_vesting/contract.py:4
     // class MasterVesting(ARC4Contract):
     intc_0 // 0
     return
 
 main_opt_into_asset_route@7:
-    // smart_contracts/master_vesting/contract.py:40
+    // smart_contracts/master_vesting/contract.py:30
     // @arc4.abimethod
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // smart_contracts/master_vesting/contract.py:14
+    // smart_contracts/master_vesting/contract.py:4
     // class MasterVesting(ARC4Contract):
     txna ApplicationArgs 1
     btoi
     txnas Assets
-    // smart_contracts/master_vesting/contract.py:40
+    // smart_contracts/master_vesting/contract.py:30
     // @arc4.abimethod
     callsub opt_into_asset
     intc_1 // 1
     return
 
 main_get_vesting_contract_route@6:
-    // smart_contracts/master_vesting/contract.py:35
+    // smart_contracts/master_vesting/contract.py:25
     // @arc4.abimethod
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // smart_contracts/master_vesting/contract.py:14
+    // smart_contracts/master_vesting/contract.py:4
     // class MasterVesting(ARC4Contract):
     txna ApplicationArgs 1
-    // smart_contracts/master_vesting/contract.py:35
+    // smart_contracts/master_vesting/contract.py:25
     // @arc4.abimethod
     callsub get_vesting_contract
     pushbytes 0x151f7c75
@@ -74,26 +74,26 @@ main_get_vesting_contract_route@6:
     return
 
 main_register_vesting_contract_route@5:
-    // smart_contracts/master_vesting/contract.py:21
+    // smart_contracts/master_vesting/contract.py:11
     // @arc4.abimethod
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // smart_contracts/master_vesting/contract.py:14
+    // smart_contracts/master_vesting/contract.py:4
     // class MasterVesting(ARC4Contract):
     txna ApplicationArgs 1
     btoi
     txnas Accounts
-    // smart_contracts/master_vesting/contract.py:21
+    // smart_contracts/master_vesting/contract.py:11
     // @arc4.abimethod
     callsub register_vesting_contract
     intc_1 // 1
     return
 
 main_bare_routing@8:
-    // smart_contracts/master_vesting/contract.py:14
+    // smart_contracts/master_vesting/contract.py:4
     // class MasterVesting(ARC4Contract):
     txn OnCompletion
     bnz main_after_if_else@10
@@ -106,22 +106,22 @@ main_bare_routing@8:
 
 // smart_contracts.master_vesting.contract.MasterVesting.register_vesting_contract(contract_address: bytes) -> void:
 register_vesting_contract:
-    // smart_contracts/master_vesting/contract.py:21-22
+    // smart_contracts/master_vesting/contract.py:11-12
     // @arc4.abimethod
     // def register_vesting_contract(self, contract_address: Account) -> None:
     proto 1 0
-    // smart_contracts/master_vesting/contract.py:25
+    // smart_contracts/master_vesting/contract.py:15
     // Txn.sender == Global.creator_address
     txn Sender
     global CreatorAddress
     ==
-    // smart_contracts/master_vesting/contract.py:23-26
+    // smart_contracts/master_vesting/contract.py:13-16
     // # Only creator can register new vesting contracts
     // assert (
     //     Txn.sender == Global.creator_address
     // ), "Only creator can register vesting contracts"
     assert // Only creator can register vesting contracts
-    // smart_contracts/master_vesting/contract.py:28-29
+    // smart_contracts/master_vesting/contract.py:18-19
     // # Store the contract address
     // contract_id = self.contract_count.native
     intc_0 // 0
@@ -129,7 +129,7 @@ register_vesting_contract:
     app_global_get_ex
     assert // check self.contract_count exists
     btoi
-    // smart_contracts/master_vesting/contract.py:30
+    // smart_contracts/master_vesting/contract.py:20
     // self.vesting_contracts[arc4.UInt64(contract_id)] = contract_address
     dup
     itob
@@ -138,7 +138,7 @@ register_vesting_contract:
     concat
     frame_dig -1
     box_put
-    // smart_contracts/master_vesting/contract.py:32-33
+    // smart_contracts/master_vesting/contract.py:22-23
     // # Increment counter
     // self.contract_count = arc4.UInt64(contract_id + 1)
     intc_1 // 1
@@ -152,11 +152,11 @@ register_vesting_contract:
 
 // smart_contracts.master_vesting.contract.MasterVesting.get_vesting_contract(index: bytes) -> bytes:
 get_vesting_contract:
-    // smart_contracts/master_vesting/contract.py:35-36
+    // smart_contracts/master_vesting/contract.py:25-26
     // @arc4.abimethod
     // def get_vesting_contract(self, index: arc4.UInt64) -> Account:
     proto 1 1
-    // smart_contracts/master_vesting/contract.py:37
+    // smart_contracts/master_vesting/contract.py:27
     // assert index.native < self.contract_count.native, "Invalid contract index"
     frame_dig -1
     btoi
@@ -167,7 +167,7 @@ get_vesting_contract:
     btoi
     <
     assert // Invalid contract index
-    // smart_contracts/master_vesting/contract.py:38
+    // smart_contracts/master_vesting/contract.py:28
     // return self.vesting_contracts[index]
     bytec_2 // "contracts"
     frame_dig -1
@@ -179,18 +179,18 @@ get_vesting_contract:
 
 // smart_contracts.master_vesting.contract.MasterVesting.opt_into_asset(asset: uint64) -> void:
 opt_into_asset:
-    // smart_contracts/master_vesting/contract.py:40-41
+    // smart_contracts/master_vesting/contract.py:30-31
     // @arc4.abimethod
     // def opt_into_asset(self, asset: Asset) -> None:
     proto 1 0
-    // smart_contracts/master_vesting/contract.py:42-43
+    // smart_contracts/master_vesting/contract.py:32-33
     // # Only allow app creator to opt the app account into an ASA
     // assert Txn.sender == Global.creator_address, "Only creator can opt in to ASA"
     txn Sender
     global CreatorAddress
     ==
     assert // Only creator can opt in to ASA
-    // smart_contracts/master_vesting/contract.py:45-46
+    // smart_contracts/master_vesting/contract.py:35-36
     // # Verify an ASA hasn't already been opted into
     // assert self.asa.id == 0, "ASA already opted in"
     intc_0 // 0
@@ -199,33 +199,33 @@ opt_into_asset:
     assert // check self.asa exists
     !
     assert // ASA already opted in
-    // smart_contracts/master_vesting/contract.py:48-49
+    // smart_contracts/master_vesting/contract.py:38-39
     // # Save ASA ID in global state
     // self.asa = asset
     bytec_1 // "asa"
     frame_dig -1
     app_global_put
-    // smart_contracts/master_vesting/contract.py:51-55
+    // smart_contracts/master_vesting/contract.py:41-45
     // # Submit opt-in transaction: 0 asset transfer to self
     // itxn.AssetTransfer(
     //     asset_receiver=Global.current_application_address,
     //     xfer_asset=asset,
     // ).submit()
     itxn_begin
-    // smart_contracts/master_vesting/contract.py:53
+    // smart_contracts/master_vesting/contract.py:43
     // asset_receiver=Global.current_application_address,
     global CurrentApplicationAddress
     frame_dig -1
     itxn_field XferAsset
     itxn_field AssetReceiver
-    // smart_contracts/master_vesting/contract.py:51-52
+    // smart_contracts/master_vesting/contract.py:41-42
     // # Submit opt-in transaction: 0 asset transfer to self
     // itxn.AssetTransfer(
     pushint 4 // axfer
     itxn_field TypeEnum
     intc_0 // 0
     itxn_field Fee
-    // smart_contracts/master_vesting/contract.py:51-55
+    // smart_contracts/master_vesting/contract.py:41-45
     // # Submit opt-in transaction: 0 asset transfer to self
     // itxn.AssetTransfer(
     //     asset_receiver=Global.current_application_address,
