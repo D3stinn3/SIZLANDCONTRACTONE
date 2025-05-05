@@ -3,54 +3,131 @@
   "sources": [
     "../../master_vesting/contract.py"
   ],
-  "mappings": ";AAKA;;AAAA;;;AAAA;;;;;;AAAA;;;AAAA;;;;AAAA;;;AACK;;AAAA;AAAA;AAAA;;AAAA;AADL;;;AAAA;;;AACK;;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;;;;;;AAAA;AAAA;AAAA;AAAA;;;AADL;;AAAA;;;;;;;;;;AACA;;;AAEe;;;;;;;;;AAAA;;AAAA;AAAP",
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAiBQ;AAAsB;;;;;;;;;;AAAtB;AACA;AAAW;AAAX;AALR;;AAAA;;;AAAA;;;;;;;;;;;;;;;;;AAAA;;;AAAA;;;;;;;;AAAA;;AA0BK;;AAAA;AAAA;AAAA;;AAAA;AA1BL;;;AAAA;AAAA;;AA0BK;;;AAAA;;AALA;;AAAA;AAAA;AAAA;;AAAA;AArBL;;;AAqBK;;;AAAA;;;;;;AAAA;AAAA;AAAA;AAAA;;AAdA;;AAAA;AAAA;AAAA;;AAAA;AAPL;;;AAAA;AAAA;;AAOK;;;AAAA;;AAPL;;AAAA;;;;;;;;;AAOA;;;AAIY;;AAAc;;AAAd;AADJ;AAKc;AAAA;AAAA;AAAA;AAAA;AACS;AAAA;AAAvB;AAAA;AAAA;AAAA;;AAAA;AAGgD;AAAd;AAAZ;AAAtB;AAAA;AAAA;;AAER;;;AAEe;;AAAA;AAAe;AAAA;AAAA;AAAA;AAAA;AAAf;AAAP;AACO;AAAA;;AAAA;AAAA;AAAA;AAAP;AAER;;;AAGe;;AAAc;;AAAd;AAAP;AAGO;AAAA;AAAA;AAAA;AAAA;AAAP;AAGA;AAAA;;AAAA;AAGA;AACmB;;;;;;;;AADnB;;;;AAAA;;;AAAA;",
   "op_pc_offset": 0,
   "pc_events": {
     "1": {
-      "subroutine": "algopy.arc4.ARC4Contract.approval_program",
+      "subroutine": "smart_contracts.master_vesting.contract.MasterVesting.__algopy_entrypoint_with_init",
       "params": {},
       "block": "main",
       "stack_in": [],
+      "op": "intcblock 0 1"
+    },
+    "5": {
+      "op": "bytecblock \"contract_count\" \"asa\" \"contracts\""
+    },
+    "36": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "38": {
+      "op": "bnz main_after_if_else@2",
+      "stack_out": []
+    },
+    "41": {
+      "op": "bytec_0 // \"contract_count\"",
+      "defined_out": [
+        "\"contract_count\""
+      ],
+      "stack_out": [
+        "\"contract_count\""
+      ]
+    },
+    "42": {
+      "op": "pushbytes 0x0000000000000000",
+      "defined_out": [
+        "\"contract_count\"",
+        "0x0000000000000000"
+      ],
+      "stack_out": [
+        "\"contract_count\"",
+        "0x0000000000000000"
+      ]
+    },
+    "52": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "53": {
+      "op": "bytec_1 // \"asa\"",
+      "defined_out": [
+        "\"asa\""
+      ],
+      "stack_out": [
+        "\"asa\""
+      ]
+    },
+    "54": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "\"asa\"",
+        "0"
+      ],
+      "stack_out": [
+        "\"asa\"",
+        "0"
+      ]
+    },
+    "55": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "56": {
+      "block": "main_after_if_else@2",
+      "stack_in": [],
       "op": "txn NumAppArgs",
       "defined_out": [
-        "tmp%0#1"
+        "tmp%0#2"
       ],
       "stack_out": [
-        "tmp%0#1"
+        "tmp%0#2"
       ]
     },
-    "3": {
-      "op": "bz main_bare_routing@6",
+    "58": {
+      "op": "bz main_bare_routing@8",
       "stack_out": []
     },
-    "6": {
-      "op": "pushbytes 0x02bece11 // method \"hello(string)string\"",
+    "61": {
+      "op": "pushbytess 0xdc5f4f13 0x31ebc0d4 0x2826b202 // method \"register_vesting_contract(account)void\", method \"get_vesting_contract(uint64)address\", method \"opt_into_asset(asset)void\"",
       "defined_out": [
-        "Method(hello(string)string)"
+        "Method(get_vesting_contract(uint64)address)",
+        "Method(opt_into_asset(asset)void)",
+        "Method(register_vesting_contract(account)void)"
       ],
       "stack_out": [
-        "Method(hello(string)string)"
+        "Method(register_vesting_contract(account)void)",
+        "Method(get_vesting_contract(uint64)address)",
+        "Method(opt_into_asset(asset)void)"
       ]
     },
-    "12": {
+    "78": {
       "op": "txna ApplicationArgs 0",
       "defined_out": [
-        "Method(hello(string)string)",
+        "Method(get_vesting_contract(uint64)address)",
+        "Method(opt_into_asset(asset)void)",
+        "Method(register_vesting_contract(account)void)",
         "tmp%2#0"
       ],
       "stack_out": [
-        "Method(hello(string)string)",
+        "Method(register_vesting_contract(account)void)",
+        "Method(get_vesting_contract(uint64)address)",
+        "Method(opt_into_asset(asset)void)",
         "tmp%2#0"
       ]
     },
-    "15": {
-      "op": "match main_hello_route@3",
+    "81": {
+      "op": "match main_register_vesting_contract_route@5 main_get_vesting_contract_route@6 main_opt_into_asset_route@7",
       "stack_out": []
     },
-    "19": {
+    "89": {
       "block": "main_after_if_else@10",
       "stack_in": [],
-      "op": "pushint 0 // 0",
+      "op": "intc_0 // 0",
       "defined_out": [
         "tmp%0#0"
       ],
@@ -58,170 +135,83 @@
         "tmp%0#0"
       ]
     },
-    "21": {
+    "90": {
       "op": "return",
       "stack_out": []
     },
-    "22": {
-      "block": "main_hello_route@3",
+    "91": {
+      "block": "main_opt_into_asset_route@7",
       "stack_in": [],
       "op": "txn OnCompletion",
       "defined_out": [
-        "tmp%3#0"
+        "tmp%15#0"
       ],
       "stack_out": [
-        "tmp%3#0"
+        "tmp%15#0"
       ]
     },
-    "24": {
+    "93": {
       "op": "!",
       "defined_out": [
-        "tmp%4#0"
+        "tmp%16#0"
       ],
       "stack_out": [
-        "tmp%4#0"
+        "tmp%16#0"
       ]
     },
-    "25": {
+    "94": {
       "error": "OnCompletion is not NoOp",
       "op": "assert // OnCompletion is not NoOp",
       "stack_out": []
     },
-    "26": {
+    "95": {
       "op": "txn ApplicationID",
       "defined_out": [
-        "tmp%5#0"
+        "tmp%17#0"
       ],
       "stack_out": [
-        "tmp%5#0"
+        "tmp%17#0"
       ]
     },
-    "28": {
+    "97": {
       "error": "can only call when not creating",
       "op": "assert // can only call when not creating",
       "stack_out": []
     },
-    "29": {
+    "98": {
       "op": "txna ApplicationArgs 1",
       "defined_out": [
-        "tmp%7#0"
+        "reinterpret_bytes[1]%1#0"
       ],
       "stack_out": [
-        "tmp%7#0"
+        "reinterpret_bytes[1]%1#0"
       ]
     },
-    "32": {
-      "op": "extract 2 0",
+    "101": {
+      "op": "btoi",
       "defined_out": [
-        "tmp%8#0"
+        "tmp%19#0"
       ],
       "stack_out": [
-        "tmp%8#0"
+        "tmp%19#0"
       ]
     },
-    "35": {
-      "callsub": "smart_contracts.master_vesting.contract.MasterVesting.hello",
-      "op": "callsub hello",
+    "102": {
+      "op": "txnas Assets",
       "defined_out": [
-        "to_encode%0#0"
+        "tmp%20#0"
       ],
       "stack_out": [
-        "to_encode%0#0"
+        "tmp%20#0"
       ]
     },
-    "38": {
-      "op": "dup",
-      "defined_out": [
-        "to_encode%0#0",
-        "to_encode%0#0 (copy)"
-      ],
-      "stack_out": [
-        "to_encode%0#0",
-        "to_encode%0#0 (copy)"
-      ]
-    },
-    "39": {
-      "op": "len",
-      "defined_out": [
-        "length%0#0",
-        "to_encode%0#0"
-      ],
-      "stack_out": [
-        "to_encode%0#0",
-        "length%0#0"
-      ]
-    },
-    "40": {
-      "op": "itob",
-      "defined_out": [
-        "as_bytes%0#0",
-        "to_encode%0#0"
-      ],
-      "stack_out": [
-        "to_encode%0#0",
-        "as_bytes%0#0"
-      ]
-    },
-    "41": {
-      "op": "extract 6 2",
-      "defined_out": [
-        "length_uint16%0#0",
-        "to_encode%0#0"
-      ],
-      "stack_out": [
-        "to_encode%0#0",
-        "length_uint16%0#0"
-      ]
-    },
-    "44": {
-      "op": "swap",
-      "stack_out": [
-        "length_uint16%0#0",
-        "to_encode%0#0"
-      ]
-    },
-    "45": {
-      "op": "concat",
-      "defined_out": [
-        "encoded_value%0#0"
-      ],
-      "stack_out": [
-        "encoded_value%0#0"
-      ]
-    },
-    "46": {
-      "op": "pushbytes 0x151f7c75",
-      "defined_out": [
-        "0x151f7c75",
-        "encoded_value%0#0"
-      ],
-      "stack_out": [
-        "encoded_value%0#0",
-        "0x151f7c75"
-      ]
-    },
-    "52": {
-      "op": "swap",
-      "stack_out": [
-        "0x151f7c75",
-        "encoded_value%0#0"
-      ]
-    },
-    "53": {
-      "op": "concat",
-      "defined_out": [
-        "tmp%9#0"
-      ],
-      "stack_out": [
-        "tmp%9#0"
-      ]
-    },
-    "54": {
-      "op": "log",
+    "104": {
+      "callsub": "smart_contracts.master_vesting.contract.MasterVesting.opt_into_asset",
+      "op": "callsub opt_into_asset",
       "stack_out": []
     },
-    "55": {
-      "op": "pushint 1 // 1",
+    "107": {
+      "op": "intc_1 // 1",
       "defined_out": [
         "tmp%0#0"
       ],
@@ -229,14 +219,23 @@
         "tmp%0#0"
       ]
     },
-    "57": {
+    "108": {
       "op": "return",
       "stack_out": []
     },
-    "58": {
-      "block": "main_bare_routing@6",
+    "109": {
+      "block": "main_get_vesting_contract_route@6",
       "stack_in": [],
       "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%9#0"
+      ],
+      "stack_out": [
+        "tmp%9#0"
+      ]
+    },
+    "111": {
+      "op": "!",
       "defined_out": [
         "tmp%10#0"
       ],
@@ -244,11 +243,12 @@
         "tmp%10#0"
       ]
     },
-    "60": {
-      "op": "bnz main_after_if_else@10",
+    "112": {
+      "error": "OnCompletion is not NoOp",
+      "op": "assert // OnCompletion is not NoOp",
       "stack_out": []
     },
-    "63": {
+    "113": {
       "op": "txn ApplicationID",
       "defined_out": [
         "tmp%11#0"
@@ -257,22 +257,198 @@
         "tmp%11#0"
       ]
     },
-    "65": {
-      "op": "!",
+    "115": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "116": {
+      "op": "txna ApplicationArgs 1",
       "defined_out": [
-        "tmp%12#0"
+        "reinterpret_bytes[8]%0#0"
       ],
       "stack_out": [
-        "tmp%12#0"
+        "reinterpret_bytes[8]%0#0"
       ]
     },
-    "66": {
+    "119": {
+      "callsub": "smart_contracts.master_vesting.contract.MasterVesting.get_vesting_contract",
+      "op": "callsub get_vesting_contract",
+      "defined_out": [
+        "tmp%13#0"
+      ],
+      "stack_out": [
+        "tmp%13#0"
+      ]
+    },
+    "122": {
+      "op": "pushbytes 0x151f7c75",
+      "defined_out": [
+        "0x151f7c75",
+        "tmp%13#0"
+      ],
+      "stack_out": [
+        "tmp%13#0",
+        "0x151f7c75"
+      ]
+    },
+    "128": {
+      "op": "swap",
+      "stack_out": [
+        "0x151f7c75",
+        "tmp%13#0"
+      ]
+    },
+    "129": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%14#0"
+      ],
+      "stack_out": [
+        "tmp%14#0"
+      ]
+    },
+    "130": {
+      "op": "log",
+      "stack_out": []
+    },
+    "131": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "132": {
+      "op": "return",
+      "stack_out": []
+    },
+    "133": {
+      "block": "main_register_vesting_contract_route@5",
+      "stack_in": [],
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "135": {
+      "op": "!",
+      "defined_out": [
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "tmp%4#0"
+      ]
+    },
+    "136": {
+      "error": "OnCompletion is not NoOp",
+      "op": "assert // OnCompletion is not NoOp",
+      "stack_out": []
+    },
+    "137": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%5#0"
+      ],
+      "stack_out": [
+        "tmp%5#0"
+      ]
+    },
+    "139": {
+      "error": "can only call when not creating",
+      "op": "assert // can only call when not creating",
+      "stack_out": []
+    },
+    "140": {
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "reinterpret_bytes[1]%0#0"
+      ],
+      "stack_out": [
+        "reinterpret_bytes[1]%0#0"
+      ]
+    },
+    "143": {
+      "op": "btoi",
+      "defined_out": [
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "tmp%7#0"
+      ]
+    },
+    "144": {
+      "op": "txnas Accounts",
+      "defined_out": [
+        "tmp%8#0"
+      ],
+      "stack_out": [
+        "tmp%8#0"
+      ]
+    },
+    "146": {
+      "callsub": "smart_contracts.master_vesting.contract.MasterVesting.register_vesting_contract",
+      "op": "callsub register_vesting_contract",
+      "stack_out": []
+    },
+    "149": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "150": {
+      "op": "return",
+      "stack_out": []
+    },
+    "151": {
+      "block": "main_bare_routing@8",
+      "stack_in": [],
+      "op": "txn OnCompletion",
+      "defined_out": [
+        "tmp%21#0"
+      ],
+      "stack_out": [
+        "tmp%21#0"
+      ]
+    },
+    "153": {
+      "op": "bnz main_after_if_else@10",
+      "stack_out": []
+    },
+    "156": {
+      "op": "txn ApplicationID",
+      "defined_out": [
+        "tmp%22#0"
+      ],
+      "stack_out": [
+        "tmp%22#0"
+      ]
+    },
+    "158": {
+      "op": "!",
+      "defined_out": [
+        "tmp%23#0"
+      ],
+      "stack_out": [
+        "tmp%23#0"
+      ]
+    },
+    "159": {
       "error": "can only call when creating",
       "op": "assert // can only call when creating",
       "stack_out": []
     },
-    "67": {
-      "op": "pushint 1 // 1",
+    "160": {
+      "op": "intc_1 // 1",
       "defined_out": [
         "tmp%0#0"
       ],
@@ -280,41 +456,244 @@
         "tmp%0#0"
       ]
     },
-    "69": {
+    "161": {
       "op": "return",
       "stack_out": []
     },
-    "70": {
-      "subroutine": "smart_contracts.master_vesting.contract.MasterVesting.hello",
+    "162": {
+      "subroutine": "smart_contracts.master_vesting.contract.MasterVesting.register_vesting_contract",
       "params": {
-        "name#0": "bytes"
+        "contract_address#0": "bytes"
       },
-      "block": "hello",
+      "block": "register_vesting_contract",
+      "stack_in": [],
+      "op": "proto 1 0"
+    },
+    "165": {
+      "op": "txn Sender",
+      "defined_out": [
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "167": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "169": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "170": {
+      "error": "Only creator can register vesting contracts",
+      "op": "assert // Only creator can register vesting contracts",
+      "stack_out": []
+    },
+    "171": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0"
+      ],
+      "stack_out": [
+        "0"
+      ]
+    },
+    "172": {
+      "op": "bytec_0 // \"contract_count\"",
+      "defined_out": [
+        "\"contract_count\"",
+        "0"
+      ],
+      "stack_out": [
+        "0",
+        "\"contract_count\""
+      ]
+    },
+    "173": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0"
+      ],
+      "stack_out": [
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "174": {
+      "error": "check self.contract_count exists",
+      "op": "assert // check self.contract_count exists",
+      "stack_out": [
+        "maybe_value%0#0"
+      ]
+    },
+    "175": {
+      "op": "btoi",
+      "defined_out": [
+        "contract_id#0"
+      ],
+      "stack_out": [
+        "contract_id#0"
+      ]
+    },
+    "176": {
+      "op": "dup",
+      "defined_out": [
+        "contract_id#0",
+        "contract_id#0 (copy)"
+      ],
+      "stack_out": [
+        "contract_id#0",
+        "contract_id#0 (copy)"
+      ]
+    },
+    "177": {
+      "op": "itob",
+      "defined_out": [
+        "contract_id#0",
+        "val_as_bytes%0#0"
+      ],
+      "stack_out": [
+        "contract_id#0",
+        "val_as_bytes%0#0"
+      ]
+    },
+    "178": {
+      "op": "bytec_2 // \"contracts\"",
+      "defined_out": [
+        "\"contracts\"",
+        "contract_id#0",
+        "val_as_bytes%0#0"
+      ],
+      "stack_out": [
+        "contract_id#0",
+        "val_as_bytes%0#0",
+        "\"contracts\""
+      ]
+    },
+    "179": {
+      "op": "swap",
+      "stack_out": [
+        "contract_id#0",
+        "\"contracts\"",
+        "val_as_bytes%0#0"
+      ]
+    },
+    "180": {
+      "op": "concat",
+      "defined_out": [
+        "contract_id#0",
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "contract_id#0",
+        "tmp%3#0"
+      ]
+    },
+    "181": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "contract_address#0 (copy)",
+        "contract_id#0",
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "contract_id#0",
+        "tmp%3#0",
+        "contract_address#0 (copy)"
+      ]
+    },
+    "183": {
+      "op": "box_put",
+      "stack_out": [
+        "contract_id#0"
+      ]
+    },
+    "184": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1",
+        "contract_id#0"
+      ],
+      "stack_out": [
+        "contract_id#0",
+        "1"
+      ]
+    },
+    "185": {
+      "op": "+",
+      "defined_out": [
+        "to_encode%0#0"
+      ],
+      "stack_out": [
+        "to_encode%0#0"
+      ]
+    },
+    "186": {
+      "op": "itob",
+      "defined_out": [
+        "val_as_bytes%1#0"
+      ],
+      "stack_out": [
+        "val_as_bytes%1#0"
+      ]
+    },
+    "187": {
+      "op": "bytec_0 // \"contract_count\"",
+      "stack_out": [
+        "val_as_bytes%1#0",
+        "\"contract_count\""
+      ]
+    },
+    "188": {
+      "op": "swap",
+      "stack_out": [
+        "\"contract_count\"",
+        "val_as_bytes%1#0"
+      ]
+    },
+    "189": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "190": {
+      "retsub": true,
+      "op": "retsub"
+    },
+    "191": {
+      "subroutine": "smart_contracts.master_vesting.contract.MasterVesting.get_vesting_contract",
+      "params": {
+        "index#0": "bytes"
+      },
+      "block": "get_vesting_contract",
       "stack_in": [],
       "op": "proto 1 1"
     },
-    "73": {
-      "op": "pushbytes \"Hello, \"",
-      "defined_out": [
-        "\"Hello, \""
-      ],
-      "stack_out": [
-        "\"Hello, \""
-      ]
-    },
-    "82": {
+    "194": {
       "op": "frame_dig -1",
       "defined_out": [
-        "\"Hello, \"",
-        "name#0 (copy)"
+        "index#0 (copy)"
       ],
       "stack_out": [
-        "\"Hello, \"",
-        "name#0 (copy)"
+        "index#0 (copy)"
       ]
     },
-    "84": {
-      "op": "concat",
+    "196": {
+      "op": "btoi",
       "defined_out": [
         "tmp%0#0"
       ],
@@ -322,7 +701,295 @@
         "tmp%0#0"
       ]
     },
-    "85": {
+    "197": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "0"
+      ]
+    },
+    "198": {
+      "op": "bytec_0 // \"contract_count\"",
+      "defined_out": [
+        "\"contract_count\"",
+        "0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "0",
+        "\"contract_count\""
+      ]
+    },
+    "199": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "200": {
+      "error": "check self.contract_count exists",
+      "op": "assert // check self.contract_count exists",
+      "stack_out": [
+        "tmp%0#0",
+        "maybe_value%0#0"
+      ]
+    },
+    "201": {
+      "op": "btoi",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "202": {
+      "op": "<",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "203": {
+      "error": "Invalid contract index",
+      "op": "assert // Invalid contract index",
+      "stack_out": []
+    },
+    "204": {
+      "op": "bytec_2 // \"contracts\"",
+      "defined_out": [
+        "\"contracts\""
+      ],
+      "stack_out": [
+        "\"contracts\""
+      ]
+    },
+    "205": {
+      "op": "frame_dig -1",
+      "stack_out": [
+        "\"contracts\"",
+        "index#0 (copy)"
+      ]
+    },
+    "207": {
+      "op": "concat",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "208": {
+      "op": "box_get",
+      "defined_out": [
+        "maybe_exists%1#0",
+        "maybe_value%1#0"
+      ],
+      "stack_out": [
+        "maybe_value%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "209": {
+      "error": "check self.vesting_contracts entry exists",
+      "op": "assert // check self.vesting_contracts entry exists",
+      "stack_out": [
+        "maybe_value%1#0"
+      ]
+    },
+    "210": {
+      "retsub": true,
+      "op": "retsub"
+    },
+    "211": {
+      "subroutine": "smart_contracts.master_vesting.contract.MasterVesting.opt_into_asset",
+      "params": {
+        "asset#0": "uint64"
+      },
+      "block": "opt_into_asset",
+      "stack_in": [],
+      "op": "proto 1 0"
+    },
+    "214": {
+      "op": "txn Sender",
+      "defined_out": [
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0"
+      ]
+    },
+    "216": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "tmp%1#0"
+      ]
+    },
+    "218": {
+      "op": "==",
+      "defined_out": [
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%2#0"
+      ]
+    },
+    "219": {
+      "error": "Only creator can opt in to ASA",
+      "op": "assert // Only creator can opt in to ASA",
+      "stack_out": []
+    },
+    "220": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0"
+      ],
+      "stack_out": [
+        "0"
+      ]
+    },
+    "221": {
+      "op": "bytec_1 // \"asa\"",
+      "defined_out": [
+        "\"asa\"",
+        "0"
+      ],
+      "stack_out": [
+        "0",
+        "\"asa\""
+      ]
+    },
+    "222": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%0#0",
+        "maybe_value%0#0"
+      ],
+      "stack_out": [
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "223": {
+      "error": "check self.asa exists",
+      "op": "assert // check self.asa exists",
+      "stack_out": [
+        "maybe_value%0#0"
+      ]
+    },
+    "224": {
+      "op": "!",
+      "defined_out": [
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "tmp%3#0"
+      ]
+    },
+    "225": {
+      "error": "ASA already opted in",
+      "op": "assert // ASA already opted in",
+      "stack_out": []
+    },
+    "226": {
+      "op": "bytec_1 // \"asa\"",
+      "stack_out": [
+        "\"asa\""
+      ]
+    },
+    "227": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "\"asa\"",
+        "asset#0 (copy)"
+      ],
+      "stack_out": [
+        "\"asa\"",
+        "asset#0 (copy)"
+      ]
+    },
+    "229": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "230": {
+      "op": "itxn_begin"
+    },
+    "231": {
+      "op": "global CurrentApplicationAddress",
+      "defined_out": [
+        "inner_txn_params%0%%param_AssetReceiver_idx_0#0"
+      ],
+      "stack_out": [
+        "inner_txn_params%0%%param_AssetReceiver_idx_0#0"
+      ]
+    },
+    "233": {
+      "op": "frame_dig -1",
+      "stack_out": [
+        "inner_txn_params%0%%param_AssetReceiver_idx_0#0",
+        "asset#0 (copy)"
+      ]
+    },
+    "235": {
+      "op": "itxn_field XferAsset",
+      "stack_out": [
+        "inner_txn_params%0%%param_AssetReceiver_idx_0#0"
+      ]
+    },
+    "237": {
+      "op": "itxn_field AssetReceiver",
+      "stack_out": []
+    },
+    "239": {
+      "op": "pushint 4 // axfer",
+      "defined_out": [
+        "axfer"
+      ],
+      "stack_out": [
+        "axfer"
+      ]
+    },
+    "241": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": []
+    },
+    "243": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "0"
+      ]
+    },
+    "244": {
+      "op": "itxn_field Fee",
+      "stack_out": []
+    },
+    "246": {
+      "op": "itxn_submit"
+    },
+    "247": {
       "retsub": true,
       "op": "retsub"
     }

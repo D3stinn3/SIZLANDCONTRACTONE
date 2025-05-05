@@ -19,7 +19,7 @@ from algosdk.v2client.models import SimulateTraceConfig
 import algokit_utils
 from algokit_utils import AlgorandClient as _AlgoKitAlgorandClient
 
-_APP_SPEC_JSON = r"""{"arcs": [22, 28], "bareActions": {"call": [], "create": ["NoOp"]}, "methods": [{"actions": {"call": ["NoOp"], "create": []}, "args": [{"type": "string", "name": "name"}], "name": "hello", "returns": {"type": "string"}, "events": [], "readonly": false, "recommendations": {}}], "name": "MasterVesting", "state": {"keys": {"box": {}, "global": {}, "local": {}}, "maps": {"box": {}, "global": {}, "local": {}}, "schema": {"global": {"bytes": 0, "ints": 0}, "local": {"bytes": 0, "ints": 0}}}, "structs": {}, "byteCode": {"approval": "CjEbQQA0gAQCvs4RNhoAjgEAA4EAQzEZFEQxGEQ2GgFXAgCIACBJFRZXBgJMUIAEFR98dUxQsIEBQzEZQP/UMRgURIEBQ4oBAYAHSGVsbG8sIIv/UIk=", "clear": "CoEBQw=="}, "compilerInfo": {"compiler": "puya", "compilerVersion": {"major": 4, "minor": 7, "patch": 0}}, "events": [], "networks": {}, "source": {"approval": "I3ByYWdtYSB2ZXJzaW9uIDEwCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBhbGdvcHkuYXJjNC5BUkM0Q29udHJhY3QuYXBwcm92YWxfcHJvZ3JhbSgpIC0+IHVpbnQ2NDoKbWFpbjoKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTo2CiAgICAvLyBjbGFzcyBNYXN0ZXJWZXN0aW5nKEFSQzRDb250cmFjdCk6CiAgICB0eG4gTnVtQXBwQXJncwogICAgYnogbWFpbl9iYXJlX3JvdXRpbmdANgogICAgcHVzaGJ5dGVzIDB4MDJiZWNlMTEgLy8gbWV0aG9kICJoZWxsbyhzdHJpbmcpc3RyaW5nIgogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMAogICAgbWF0Y2ggbWFpbl9oZWxsb19yb3V0ZUAzCgptYWluX2FmdGVyX2lmX2Vsc2VAMTA6CiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6NgogICAgLy8gY2xhc3MgTWFzdGVyVmVzdGluZyhBUkM0Q29udHJhY3QpOgogICAgcHVzaGludCAwIC8vIDAKICAgIHJldHVybgoKbWFpbl9oZWxsb19yb3V0ZUAzOgogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjcKICAgIC8vIEBhYmltZXRob2QoKQogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIE9uQ29tcGxldGlvbiBpcyBub3QgTm9PcAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGFzc2VydCAvLyBjYW4gb25seSBjYWxsIHdoZW4gbm90IGNyZWF0aW5nCiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6NgogICAgLy8gY2xhc3MgTWFzdGVyVmVzdGluZyhBUkM0Q29udHJhY3QpOgogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQogICAgZXh0cmFjdCAyIDAKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTo3CiAgICAvLyBAYWJpbWV0aG9kKCkKICAgIGNhbGxzdWIgaGVsbG8KICAgIGR1cAogICAgbGVuCiAgICBpdG9iCiAgICBleHRyYWN0IDYgMgogICAgc3dhcAogICAgY29uY2F0CiAgICBwdXNoYnl0ZXMgMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIHB1c2hpbnQgMSAvLyAxCiAgICByZXR1cm4KCm1haW5fYmFyZV9yb3V0aW5nQDY6CiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6NgogICAgLy8gY2xhc3MgTWFzdGVyVmVzdGluZyhBUkM0Q29udHJhY3QpOgogICAgdHhuIE9uQ29tcGxldGlvbgogICAgYm56IG1haW5fYWZ0ZXJfaWZfZWxzZUAxMAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgICEKICAgIGFzc2VydCAvLyBjYW4gb25seSBjYWxsIHdoZW4gY3JlYXRpbmcKICAgIHB1c2hpbnQgMSAvLyAxCiAgICByZXR1cm4KCgovLyBzbWFydF9jb250cmFjdHMubWFzdGVyX3Zlc3RpbmcuY29udHJhY3QuTWFzdGVyVmVzdGluZy5oZWxsbyhuYW1lOiBieXRlcykgLT4gYnl0ZXM6CmhlbGxvOgogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjctOAogICAgLy8gQGFiaW1ldGhvZCgpCiAgICAvLyBkZWYgaGVsbG8oc2VsZiwgbmFtZTogU3RyaW5nKSAtPiBTdHJpbmc6CiAgICBwcm90byAxIDEKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTo5CiAgICAvLyByZXR1cm4gIkhlbGxvLCAiICsgbmFtZQogICAgcHVzaGJ5dGVzICJIZWxsbywgIgogICAgZnJhbWVfZGlnIC0xCiAgICBjb25jYXQKICAgIHJldHN1Ygo=", "clear": "I3ByYWdtYSB2ZXJzaW9uIDEwCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBhbGdvcHkuYXJjNC5BUkM0Q29udHJhY3QuY2xlYXJfc3RhdGVfcHJvZ3JhbSgpIC0+IHVpbnQ2NDoKbWFpbjoKICAgIHB1c2hpbnQgMSAvLyAxCiAgICByZXR1cm4K"}, "sourceInfo": {"approval": {"pcOffsetMethod": "none", "sourceInfo": [{"pc": [25], "errorMessage": "OnCompletion is not NoOp"}, {"pc": [66], "errorMessage": "can only call when creating"}, {"pc": [28], "errorMessage": "can only call when not creating"}]}, "clear": {"pcOffsetMethod": "none", "sourceInfo": []}}, "templateVariables": {}}"""
+_APP_SPEC_JSON = r"""{"arcs": [22, 28], "bareActions": {"call": [], "create": ["NoOp"]}, "methods": [{"actions": {"call": ["NoOp"], "create": []}, "args": [{"type": "account", "name": "contract_address"}], "name": "register_vesting_contract", "returns": {"type": "void"}, "events": [], "readonly": false, "recommendations": {}}, {"actions": {"call": ["NoOp"], "create": []}, "args": [{"type": "uint64", "name": "index"}], "name": "get_vesting_contract", "returns": {"type": "address"}, "events": [], "readonly": false, "recommendations": {}}, {"actions": {"call": ["NoOp"], "create": []}, "args": [{"type": "asset", "name": "asset"}], "name": "opt_into_asset", "returns": {"type": "void"}, "events": [], "readonly": false, "recommendations": {}}], "name": "MasterVesting", "state": {"keys": {"box": {}, "global": {"contract_count": {"key": "Y29udHJhY3RfY291bnQ=", "keyType": "AVMString", "valueType": "uint64"}, "asa": {"key": "YXNh", "keyType": "AVMString", "valueType": "AVMUint64"}}, "local": {}}, "maps": {"box": {"vesting_contracts": {"keyType": "uint64", "valueType": "address", "prefix": "Y29udHJhY3Rz"}}, "global": {}, "local": {}}, "schema": {"global": {"bytes": 1, "ints": 1}, "local": {"bytes": 0, "ints": 0}}}, "structs": {}, "byteCode": {"approval": "CiACAAEmAw5jb250cmFjdF9jb3VudANhc2EJY29udHJhY3RzMRhAAA8ogAgAAAAAAAAAAGcpImcxG0EAWoIDBNxfTxMEMevA1AQoJrICNhoAjgMALAAUAAIiQzEZFEQxGEQ2GgEXwDCIAGgjQzEZFEQxGEQ2GgGIAEWABBUffHVMULAjQzEZFEQxGEQ2GgEXwByIAA0jQzEZQP+9MRgURCNDigEAMQAyCRJEIihlRBdJFipMUIv/vyMIFihMZ4mKAQGL/xciKGVEFwxEKov/UL5EiYoBADEAMgkSRCIpZUQURCmL/2exMgqL/7IRshSBBLIQIrIBs4k=", "clear": "CoEBQw=="}, "compilerInfo": {"compiler": "puya", "compilerVersion": {"major": 4, "minor": 7, "patch": 0}}, "events": [], "networks": {}, "source": {"approval": "I3ByYWdtYSB2ZXJzaW9uIDEwCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBzbWFydF9jb250cmFjdHMubWFzdGVyX3Zlc3RpbmcuY29udHJhY3QuTWFzdGVyVmVzdGluZy5fX2FsZ29weV9lbnRyeXBvaW50X3dpdGhfaW5pdCgpIC0+IHVpbnQ2NDoKbWFpbjoKICAgIGludGNibG9jayAwIDEKICAgIGJ5dGVjYmxvY2sgImNvbnRyYWN0X2NvdW50IiAiYXNhIiAiY29udHJhY3RzIgogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGJueiBtYWluX2FmdGVyX2lmX2Vsc2VAMgogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjE4CiAgICAvLyBzZWxmLmNvbnRyYWN0X2NvdW50ID0gYXJjNC5VSW50NjQoMCkKICAgIGJ5dGVjXzAgLy8gImNvbnRyYWN0X2NvdW50IgogICAgcHVzaGJ5dGVzIDB4MDAwMDAwMDAwMDAwMDAwMAogICAgYXBwX2dsb2JhbF9wdXQKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weToxOQogICAgLy8gc2VsZi5hc2EgPSBBc3NldCgpCiAgICBieXRlY18xIC8vICJhc2EiCiAgICBpbnRjXzAgLy8gMAogICAgYXBwX2dsb2JhbF9wdXQKCm1haW5fYWZ0ZXJfaWZfZWxzZUAyOgogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjE0CiAgICAvLyBjbGFzcyBNYXN0ZXJWZXN0aW5nKEFSQzRDb250cmFjdCk6CiAgICB0eG4gTnVtQXBwQXJncwogICAgYnogbWFpbl9iYXJlX3JvdXRpbmdAOAogICAgcHVzaGJ5dGVzcyAweGRjNWY0ZjEzIDB4MzFlYmMwZDQgMHgyODI2YjIwMiAvLyBtZXRob2QgInJlZ2lzdGVyX3Zlc3RpbmdfY29udHJhY3QoYWNjb3VudCl2b2lkIiwgbWV0aG9kICJnZXRfdmVzdGluZ19jb250cmFjdCh1aW50NjQpYWRkcmVzcyIsIG1ldGhvZCAib3B0X2ludG9fYXNzZXQoYXNzZXQpdm9pZCIKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDAKICAgIG1hdGNoIG1haW5fcmVnaXN0ZXJfdmVzdGluZ19jb250cmFjdF9yb3V0ZUA1IG1haW5fZ2V0X3Zlc3RpbmdfY29udHJhY3Rfcm91dGVANiBtYWluX29wdF9pbnRvX2Fzc2V0X3JvdXRlQDcKCm1haW5fYWZ0ZXJfaWZfZWxzZUAxMDoKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weToxNAogICAgLy8gY2xhc3MgTWFzdGVyVmVzdGluZyhBUkM0Q29udHJhY3QpOgogICAgaW50Y18wIC8vIDAKICAgIHJldHVybgoKbWFpbl9vcHRfaW50b19hc3NldF9yb3V0ZUA3OgogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjQwCiAgICAvLyBAYXJjNC5hYmltZXRob2QKICAgIHR4biBPbkNvbXBsZXRpb24KICAgICEKICAgIGFzc2VydCAvLyBPbkNvbXBsZXRpb24gaXMgbm90IE5vT3AKICAgIHR4biBBcHBsaWNhdGlvbklECiAgICBhc3NlcnQgLy8gY2FuIG9ubHkgY2FsbCB3aGVuIG5vdCBjcmVhdGluZwogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjE0CiAgICAvLyBjbGFzcyBNYXN0ZXJWZXN0aW5nKEFSQzRDb250cmFjdCk6CiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICBidG9pCiAgICB0eG5hcyBBc3NldHMKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTo0MAogICAgLy8gQGFyYzQuYWJpbWV0aG9kCiAgICBjYWxsc3ViIG9wdF9pbnRvX2Fzc2V0CiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgptYWluX2dldF92ZXN0aW5nX2NvbnRyYWN0X3JvdXRlQDY6CiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6MzUKICAgIC8vIEBhcmM0LmFiaW1ldGhvZAogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIE9uQ29tcGxldGlvbiBpcyBub3QgTm9PcAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGFzc2VydCAvLyBjYW4gb25seSBjYWxsIHdoZW4gbm90IGNyZWF0aW5nCiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6MTQKICAgIC8vIGNsYXNzIE1hc3RlclZlc3RpbmcoQVJDNENvbnRyYWN0KToKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTozNQogICAgLy8gQGFyYzQuYWJpbWV0aG9kCiAgICBjYWxsc3ViIGdldF92ZXN0aW5nX2NvbnRyYWN0CiAgICBwdXNoYnl0ZXMgMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCm1haW5fcmVnaXN0ZXJfdmVzdGluZ19jb250cmFjdF9yb3V0ZUA1OgogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjIxCiAgICAvLyBAYXJjNC5hYmltZXRob2QKICAgIHR4biBPbkNvbXBsZXRpb24KICAgICEKICAgIGFzc2VydCAvLyBPbkNvbXBsZXRpb24gaXMgbm90IE5vT3AKICAgIHR4biBBcHBsaWNhdGlvbklECiAgICBhc3NlcnQgLy8gY2FuIG9ubHkgY2FsbCB3aGVuIG5vdCBjcmVhdGluZwogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjE0CiAgICAvLyBjbGFzcyBNYXN0ZXJWZXN0aW5nKEFSQzRDb250cmFjdCk6CiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICBidG9pCiAgICB0eG5hcyBBY2NvdW50cwogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjIxCiAgICAvLyBAYXJjNC5hYmltZXRob2QKICAgIGNhbGxzdWIgcmVnaXN0ZXJfdmVzdGluZ19jb250cmFjdAogICAgaW50Y18xIC8vIDEKICAgIHJldHVybgoKbWFpbl9iYXJlX3JvdXRpbmdAODoKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weToxNAogICAgLy8gY2xhc3MgTWFzdGVyVmVzdGluZyhBUkM0Q29udHJhY3QpOgogICAgdHhuIE9uQ29tcGxldGlvbgogICAgYm56IG1haW5fYWZ0ZXJfaWZfZWxzZUAxMAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgICEKICAgIGFzc2VydCAvLyBjYW4gb25seSBjYWxsIHdoZW4gY3JlYXRpbmcKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBzbWFydF9jb250cmFjdHMubWFzdGVyX3Zlc3RpbmcuY29udHJhY3QuTWFzdGVyVmVzdGluZy5yZWdpc3Rlcl92ZXN0aW5nX2NvbnRyYWN0KGNvbnRyYWN0X2FkZHJlc3M6IGJ5dGVzKSAtPiB2b2lkOgpyZWdpc3Rlcl92ZXN0aW5nX2NvbnRyYWN0OgogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjIxLTIyCiAgICAvLyBAYXJjNC5hYmltZXRob2QKICAgIC8vIGRlZiByZWdpc3Rlcl92ZXN0aW5nX2NvbnRyYWN0KHNlbGYsIGNvbnRyYWN0X2FkZHJlc3M6IEFjY291bnQpIC0+IE5vbmU6CiAgICBwcm90byAxIDAKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weToyNQogICAgLy8gVHhuLnNlbmRlciA9PSBHbG9iYWwuY3JlYXRvcl9hZGRyZXNzCiAgICB0eG4gU2VuZGVyCiAgICBnbG9iYWwgQ3JlYXRvckFkZHJlc3MKICAgID09CiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6MjMtMjYKICAgIC8vICMgT25seSBjcmVhdG9yIGNhbiByZWdpc3RlciBuZXcgdmVzdGluZyBjb250cmFjdHMKICAgIC8vIGFzc2VydCAoCiAgICAvLyAgICAgVHhuLnNlbmRlciA9PSBHbG9iYWwuY3JlYXRvcl9hZGRyZXNzCiAgICAvLyApLCAiT25seSBjcmVhdG9yIGNhbiByZWdpc3RlciB2ZXN0aW5nIGNvbnRyYWN0cyIKICAgIGFzc2VydCAvLyBPbmx5IGNyZWF0b3IgY2FuIHJlZ2lzdGVyIHZlc3RpbmcgY29udHJhY3RzCiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6MjgtMjkKICAgIC8vICMgU3RvcmUgdGhlIGNvbnRyYWN0IGFkZHJlc3MKICAgIC8vIGNvbnRyYWN0X2lkID0gc2VsZi5jb250cmFjdF9jb3VudC5uYXRpdmUKICAgIGludGNfMCAvLyAwCiAgICBieXRlY18wIC8vICJjb250cmFjdF9jb3VudCIKICAgIGFwcF9nbG9iYWxfZ2V0X2V4CiAgICBhc3NlcnQgLy8gY2hlY2sgc2VsZi5jb250cmFjdF9jb3VudCBleGlzdHMKICAgIGJ0b2kKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTozMAogICAgLy8gc2VsZi52ZXN0aW5nX2NvbnRyYWN0c1thcmM0LlVJbnQ2NChjb250cmFjdF9pZCldID0gY29udHJhY3RfYWRkcmVzcwogICAgZHVwCiAgICBpdG9iCiAgICBieXRlY18yIC8vICJjb250cmFjdHMiCiAgICBzd2FwCiAgICBjb25jYXQKICAgIGZyYW1lX2RpZyAtMQogICAgYm94X3B1dAogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjMyLTMzCiAgICAvLyAjIEluY3JlbWVudCBjb3VudGVyCiAgICAvLyBzZWxmLmNvbnRyYWN0X2NvdW50ID0gYXJjNC5VSW50NjQoY29udHJhY3RfaWQgKyAxKQogICAgaW50Y18xIC8vIDEKICAgICsKICAgIGl0b2IKICAgIGJ5dGVjXzAgLy8gImNvbnRyYWN0X2NvdW50IgogICAgc3dhcAogICAgYXBwX2dsb2JhbF9wdXQKICAgIHJldHN1YgoKCi8vIHNtYXJ0X2NvbnRyYWN0cy5tYXN0ZXJfdmVzdGluZy5jb250cmFjdC5NYXN0ZXJWZXN0aW5nLmdldF92ZXN0aW5nX2NvbnRyYWN0KGluZGV4OiBieXRlcykgLT4gYnl0ZXM6CmdldF92ZXN0aW5nX2NvbnRyYWN0OgogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjM1LTM2CiAgICAvLyBAYXJjNC5hYmltZXRob2QKICAgIC8vIGRlZiBnZXRfdmVzdGluZ19jb250cmFjdChzZWxmLCBpbmRleDogYXJjNC5VSW50NjQpIC0+IEFjY291bnQ6CiAgICBwcm90byAxIDEKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTozNwogICAgLy8gYXNzZXJ0IGluZGV4Lm5hdGl2ZSA8IHNlbGYuY29udHJhY3RfY291bnQubmF0aXZlLCAiSW52YWxpZCBjb250cmFjdCBpbmRleCIKICAgIGZyYW1lX2RpZyAtMQogICAgYnRvaQogICAgaW50Y18wIC8vIDAKICAgIGJ5dGVjXzAgLy8gImNvbnRyYWN0X2NvdW50IgogICAgYXBwX2dsb2JhbF9nZXRfZXgKICAgIGFzc2VydCAvLyBjaGVjayBzZWxmLmNvbnRyYWN0X2NvdW50IGV4aXN0cwogICAgYnRvaQogICAgPAogICAgYXNzZXJ0IC8vIEludmFsaWQgY29udHJhY3QgaW5kZXgKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTozOAogICAgLy8gcmV0dXJuIHNlbGYudmVzdGluZ19jb250cmFjdHNbaW5kZXhdCiAgICBieXRlY18yIC8vICJjb250cmFjdHMiCiAgICBmcmFtZV9kaWcgLTEKICAgIGNvbmNhdAogICAgYm94X2dldAogICAgYXNzZXJ0IC8vIGNoZWNrIHNlbGYudmVzdGluZ19jb250cmFjdHMgZW50cnkgZXhpc3RzCiAgICByZXRzdWIKCgovLyBzbWFydF9jb250cmFjdHMubWFzdGVyX3Zlc3RpbmcuY29udHJhY3QuTWFzdGVyVmVzdGluZy5vcHRfaW50b19hc3NldChhc3NldDogdWludDY0KSAtPiB2b2lkOgpvcHRfaW50b19hc3NldDoKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTo0MC00MQogICAgLy8gQGFyYzQuYWJpbWV0aG9kCiAgICAvLyBkZWYgb3B0X2ludG9fYXNzZXQoc2VsZiwgYXNzZXQ6IEFzc2V0KSAtPiBOb25lOgogICAgcHJvdG8gMSAwCiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6NDItNDMKICAgIC8vICMgT25seSBhbGxvdyBhcHAgY3JlYXRvciB0byBvcHQgdGhlIGFwcCBhY2NvdW50IGludG8gYW4gQVNBCiAgICAvLyBhc3NlcnQgVHhuLnNlbmRlciA9PSBHbG9iYWwuY3JlYXRvcl9hZGRyZXNzLCAiT25seSBjcmVhdG9yIGNhbiBvcHQgaW4gdG8gQVNBIgogICAgdHhuIFNlbmRlcgogICAgZ2xvYmFsIENyZWF0b3JBZGRyZXNzCiAgICA9PQogICAgYXNzZXJ0IC8vIE9ubHkgY3JlYXRvciBjYW4gb3B0IGluIHRvIEFTQQogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjQ1LTQ2CiAgICAvLyAjIFZlcmlmeSBhbiBBU0EgaGFzbid0IGFscmVhZHkgYmVlbiBvcHRlZCBpbnRvCiAgICAvLyBhc3NlcnQgc2VsZi5hc2EuaWQgPT0gMCwgIkFTQSBhbHJlYWR5IG9wdGVkIGluIgogICAgaW50Y18wIC8vIDAKICAgIGJ5dGVjXzEgLy8gImFzYSIKICAgIGFwcF9nbG9iYWxfZ2V0X2V4CiAgICBhc3NlcnQgLy8gY2hlY2sgc2VsZi5hc2EgZXhpc3RzCiAgICAhCiAgICBhc3NlcnQgLy8gQVNBIGFscmVhZHkgb3B0ZWQgaW4KICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTo0OC00OQogICAgLy8gIyBTYXZlIEFTQSBJRCBpbiBnbG9iYWwgc3RhdGUKICAgIC8vIHNlbGYuYXNhID0gYXNzZXQKICAgIGJ5dGVjXzEgLy8gImFzYSIKICAgIGZyYW1lX2RpZyAtMQogICAgYXBwX2dsb2JhbF9wdXQKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9tYXN0ZXJfdmVzdGluZy9jb250cmFjdC5weTo1MS01NQogICAgLy8gIyBTdWJtaXQgb3B0LWluIHRyYW5zYWN0aW9uOiAwIGFzc2V0IHRyYW5zZmVyIHRvIHNlbGYKICAgIC8vIGl0eG4uQXNzZXRUcmFuc2ZlcigKICAgIC8vICAgICBhc3NldF9yZWNlaXZlcj1HbG9iYWwuY3VycmVudF9hcHBsaWNhdGlvbl9hZGRyZXNzLAogICAgLy8gICAgIHhmZXJfYXNzZXQ9YXNzZXQsCiAgICAvLyApLnN1Ym1pdCgpCiAgICBpdHhuX2JlZ2luCiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6NTMKICAgIC8vIGFzc2V0X3JlY2VpdmVyPUdsb2JhbC5jdXJyZW50X2FwcGxpY2F0aW9uX2FkZHJlc3MsCiAgICBnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcwogICAgZnJhbWVfZGlnIC0xCiAgICBpdHhuX2ZpZWxkIFhmZXJBc3NldAogICAgaXR4bl9maWVsZCBBc3NldFJlY2VpdmVyCiAgICAvLyBzbWFydF9jb250cmFjdHMvbWFzdGVyX3Zlc3RpbmcvY29udHJhY3QucHk6NTEtNTIKICAgIC8vICMgU3VibWl0IG9wdC1pbiB0cmFuc2FjdGlvbjogMCBhc3NldCB0cmFuc2ZlciB0byBzZWxmCiAgICAvLyBpdHhuLkFzc2V0VHJhbnNmZXIoCiAgICBwdXNoaW50IDQgLy8gYXhmZXIKICAgIGl0eG5fZmllbGQgVHlwZUVudW0KICAgIGludGNfMCAvLyAwCiAgICBpdHhuX2ZpZWxkIEZlZQogICAgLy8gc21hcnRfY29udHJhY3RzL21hc3Rlcl92ZXN0aW5nL2NvbnRyYWN0LnB5OjUxLTU1CiAgICAvLyAjIFN1Ym1pdCBvcHQtaW4gdHJhbnNhY3Rpb246IDAgYXNzZXQgdHJhbnNmZXIgdG8gc2VsZgogICAgLy8gaXR4bi5Bc3NldFRyYW5zZmVyKAogICAgLy8gICAgIGFzc2V0X3JlY2VpdmVyPUdsb2JhbC5jdXJyZW50X2FwcGxpY2F0aW9uX2FkZHJlc3MsCiAgICAvLyAgICAgeGZlcl9hc3NldD1hc3NldCwKICAgIC8vICkuc3VibWl0KCkKICAgIGl0eG5fc3VibWl0CiAgICByZXRzdWIK", "clear": "I3ByYWdtYSB2ZXJzaW9uIDEwCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBhbGdvcHkuYXJjNC5BUkM0Q29udHJhY3QuY2xlYXJfc3RhdGVfcHJvZ3JhbSgpIC0+IHVpbnQ2NDoKbWFpbjoKICAgIHB1c2hpbnQgMSAvLyAxCiAgICByZXR1cm4K"}, "sourceInfo": {"approval": {"pcOffsetMethod": "none", "sourceInfo": [{"pc": [225], "errorMessage": "ASA already opted in"}, {"pc": [203], "errorMessage": "Invalid contract index"}, {"pc": [94, 112, 136], "errorMessage": "OnCompletion is not NoOp"}, {"pc": [219], "errorMessage": "Only creator can opt in to ASA"}, {"pc": [170], "errorMessage": "Only creator can register vesting contracts"}, {"pc": [159], "errorMessage": "can only call when creating"}, {"pc": [97, 115, 139], "errorMessage": "can only call when not creating"}, {"pc": [223], "errorMessage": "check self.asa exists"}, {"pc": [174, 200], "errorMessage": "check self.contract_count exists"}, {"pc": [209], "errorMessage": "check self.vesting_contracts entry exists"}]}, "clear": {"pcOffsetMethod": "none", "sourceInfo": []}}, "templateVariables": {}}"""
 APP_SPEC = algokit_utils.Arc56Contract.from_json(_APP_SPEC_JSON)
 
 def _parse_abi_args(args: object | None = None) -> list[object] | None:
@@ -65,29 +65,73 @@ def _init_dataclass(cls: type, data: dict) -> object:
     return cls(**field_values)
 
 @dataclasses.dataclass(frozen=True, kw_only=True)
-class HelloArgs:
-    """Dataclass for hello arguments"""
-    name: str
+class RegisterVestingContractArgs:
+    """Dataclass for register_vesting_contract arguments"""
+    contract_address: str | bytes
 
     @property
     def abi_method_signature(self) -> str:
-        return "hello(string)string"
+        return "register_vesting_contract(account)void"
+
+@dataclasses.dataclass(frozen=True, kw_only=True)
+class GetVestingContractArgs:
+    """Dataclass for get_vesting_contract arguments"""
+    index: int
+
+    @property
+    def abi_method_signature(self) -> str:
+        return "get_vesting_contract(uint64)address"
+
+@dataclasses.dataclass(frozen=True, kw_only=True)
+class OptIntoAssetArgs:
+    """Dataclass for opt_into_asset arguments"""
+    asset: int
+
+    @property
+    def abi_method_signature(self) -> str:
+        return "opt_into_asset(asset)void"
 
 
 class MasterVestingParams:
     def __init__(self, app_client: algokit_utils.AppClient):
         self.app_client = app_client
 
-    def hello(
+    def register_vesting_contract(
         self,
-        args: tuple[str] | HelloArgs,
+        args: tuple[str | bytes] | RegisterVestingContractArgs,
         params: algokit_utils.CommonAppCallParams | None = None
     ) -> algokit_utils.AppCallMethodCallParams:
         method_args = _parse_abi_args(args)
         params = params or algokit_utils.CommonAppCallParams()
         return self.app_client.params.call(algokit_utils.AppClientMethodCallParams(**{
             **dataclasses.asdict(params),
-            "method": "hello(string)string",
+            "method": "register_vesting_contract(account)void",
+            "args": method_args,
+        }))
+
+    def get_vesting_contract(
+        self,
+        args: tuple[int] | GetVestingContractArgs,
+        params: algokit_utils.CommonAppCallParams | None = None
+    ) -> algokit_utils.AppCallMethodCallParams:
+        method_args = _parse_abi_args(args)
+        params = params or algokit_utils.CommonAppCallParams()
+        return self.app_client.params.call(algokit_utils.AppClientMethodCallParams(**{
+            **dataclasses.asdict(params),
+            "method": "get_vesting_contract(uint64)address",
+            "args": method_args,
+        }))
+
+    def opt_into_asset(
+        self,
+        args: tuple[int] | OptIntoAssetArgs,
+        params: algokit_utils.CommonAppCallParams | None = None
+    ) -> algokit_utils.AppCallMethodCallParams:
+        method_args = _parse_abi_args(args)
+        params = params or algokit_utils.CommonAppCallParams()
+        return self.app_client.params.call(algokit_utils.AppClientMethodCallParams(**{
+            **dataclasses.asdict(params),
+            "method": "opt_into_asset(asset)void",
             "args": method_args,
         }))
 
@@ -106,16 +150,42 @@ class MasterVestingCreateTransactionParams:
     def __init__(self, app_client: algokit_utils.AppClient):
         self.app_client = app_client
 
-    def hello(
+    def register_vesting_contract(
         self,
-        args: tuple[str] | HelloArgs,
+        args: tuple[str | bytes] | RegisterVestingContractArgs,
         params: algokit_utils.CommonAppCallParams | None = None
     ) -> algokit_utils.BuiltTransactions:
         method_args = _parse_abi_args(args)
         params = params or algokit_utils.CommonAppCallParams()
         return self.app_client.create_transaction.call(algokit_utils.AppClientMethodCallParams(**{
             **dataclasses.asdict(params),
-            "method": "hello(string)string",
+            "method": "register_vesting_contract(account)void",
+            "args": method_args,
+        }))
+
+    def get_vesting_contract(
+        self,
+        args: tuple[int] | GetVestingContractArgs,
+        params: algokit_utils.CommonAppCallParams | None = None
+    ) -> algokit_utils.BuiltTransactions:
+        method_args = _parse_abi_args(args)
+        params = params or algokit_utils.CommonAppCallParams()
+        return self.app_client.create_transaction.call(algokit_utils.AppClientMethodCallParams(**{
+            **dataclasses.asdict(params),
+            "method": "get_vesting_contract(uint64)address",
+            "args": method_args,
+        }))
+
+    def opt_into_asset(
+        self,
+        args: tuple[int] | OptIntoAssetArgs,
+        params: algokit_utils.CommonAppCallParams | None = None
+    ) -> algokit_utils.BuiltTransactions:
+        method_args = _parse_abi_args(args)
+        params = params or algokit_utils.CommonAppCallParams()
+        return self.app_client.create_transaction.call(algokit_utils.AppClientMethodCallParams(**{
+            **dataclasses.asdict(params),
+            "method": "opt_into_asset(asset)void",
             "args": method_args,
         }))
 
@@ -134,9 +204,25 @@ class MasterVestingSend:
     def __init__(self, app_client: algokit_utils.AppClient):
         self.app_client = app_client
 
-    def hello(
+    def register_vesting_contract(
         self,
-        args: tuple[str] | HelloArgs,
+        args: tuple[str | bytes] | RegisterVestingContractArgs,
+        params: algokit_utils.CommonAppCallParams | None = None,
+        send_params: algokit_utils.SendParams | None = None
+    ) -> algokit_utils.SendAppTransactionResult[None]:
+        method_args = _parse_abi_args(args)
+        params = params or algokit_utils.CommonAppCallParams()
+        response = self.app_client.send.call(algokit_utils.AppClientMethodCallParams(**{
+            **dataclasses.asdict(params),
+            "method": "register_vesting_contract(account)void",
+            "args": method_args,
+        }), send_params=send_params)
+        parsed_response = response
+        return typing.cast(algokit_utils.SendAppTransactionResult[None], parsed_response)
+
+    def get_vesting_contract(
+        self,
+        args: tuple[int] | GetVestingContractArgs,
         params: algokit_utils.CommonAppCallParams | None = None,
         send_params: algokit_utils.SendParams | None = None
     ) -> algokit_utils.SendAppTransactionResult[str]:
@@ -144,11 +230,27 @@ class MasterVestingSend:
         params = params or algokit_utils.CommonAppCallParams()
         response = self.app_client.send.call(algokit_utils.AppClientMethodCallParams(**{
             **dataclasses.asdict(params),
-            "method": "hello(string)string",
+            "method": "get_vesting_contract(uint64)address",
             "args": method_args,
         }), send_params=send_params)
         parsed_response = response
         return typing.cast(algokit_utils.SendAppTransactionResult[str], parsed_response)
+
+    def opt_into_asset(
+        self,
+        args: tuple[int] | OptIntoAssetArgs,
+        params: algokit_utils.CommonAppCallParams | None = None,
+        send_params: algokit_utils.SendParams | None = None
+    ) -> algokit_utils.SendAppTransactionResult[None]:
+        method_args = _parse_abi_args(args)
+        params = params or algokit_utils.CommonAppCallParams()
+        response = self.app_client.send.call(algokit_utils.AppClientMethodCallParams(**{
+            **dataclasses.asdict(params),
+            "method": "opt_into_asset(asset)void",
+            "args": method_args,
+        }), send_params=send_params)
+        parsed_response = response
+        return typing.cast(algokit_utils.SendAppTransactionResult[None], parsed_response)
 
     def clear_state(
         self,
@@ -161,11 +263,136 @@ class MasterVestingSend:
         )
 
 
+class GlobalStateValue(typing.TypedDict):
+    """Shape of global_state state key values"""
+    contract_count: int
+    asa: int
+
 class MasterVestingState:
     """Methods to access state for the current MasterVesting app"""
 
     def __init__(self, app_client: algokit_utils.AppClient):
         self.app_client = app_client
+
+    @property
+    def global_state(
+        self
+    ) -> "_GlobalState":
+            """Methods to access global_state for the current app"""
+            return _GlobalState(self.app_client)
+
+    @property
+    def box(
+        self
+    ) -> "_BoxState":
+            """Methods to access box for the current app"""
+            return _BoxState(self.app_client)
+
+class _GlobalState:
+    def __init__(self, app_client: algokit_utils.AppClient):
+        self.app_client = app_client
+        
+        # Pre-generated mapping of value types to their struct classes
+        self._struct_classes: dict[str, typing.Type[typing.Any]] = {}
+
+    def get_all(self) -> GlobalStateValue:
+        """Get all current keyed values from global_state state"""
+        result = self.app_client.state.global_state.get_all()
+        if not result:
+            return typing.cast(GlobalStateValue, {})
+
+        converted = {}
+        for key, value in result.items():
+            key_info = self.app_client.app_spec.state.keys.global_state.get(key)
+            struct_class = self._struct_classes.get(key_info.value_type) if key_info else None
+            converted[key] = (
+                _init_dataclass(struct_class, value) if struct_class and isinstance(value, dict)
+                else value
+            )
+        return typing.cast(GlobalStateValue, converted)
+
+    @property
+    def contract_count(self) -> int:
+        """Get the current value of the contract_count key in global_state state"""
+        value = self.app_client.state.global_state.get_value("contract_count")
+        if isinstance(value, dict) and "uint64" in self._struct_classes:
+            return _init_dataclass(self._struct_classes["uint64"], value)  # type: ignore
+        return typing.cast(int, value)
+
+    @property
+    def asa(self) -> int:
+        """Get the current value of the asa key in global_state state"""
+        value = self.app_client.state.global_state.get_value("asa")
+        if isinstance(value, dict) and "AVMUint64" in self._struct_classes:
+            return _init_dataclass(self._struct_classes["AVMUint64"], value)  # type: ignore
+        return typing.cast(int, value)
+
+class _BoxState:
+    def __init__(self, app_client: algokit_utils.AppClient):
+        self.app_client = app_client
+        
+        # Pre-generated mapping of value types to their struct classes
+        self._struct_classes: dict[str, typing.Type[typing.Any]] = {}
+
+    def get_all(self) -> dict[str, typing.Any]:
+        """Get all current keyed values from box state"""
+        result = self.app_client.state.box.get_all()
+        if not result:
+            return {}
+
+        converted = {}
+        for key, value in result.items():
+            key_info = self.app_client.app_spec.state.keys.box.get(key)
+            struct_class = self._struct_classes.get(key_info.value_type) if key_info else None
+            converted[key] = (
+                _init_dataclass(struct_class, value) if struct_class and isinstance(value, dict)
+                else value
+            )
+        return converted
+
+    @property
+    def vesting_contracts(self) -> "_MapState[int, str]":
+        """Get values from the vesting_contracts map in box state"""
+        return _MapState(
+            self.app_client.state.box,
+            "vesting_contracts",
+            None
+        )
+
+_KeyType = typing.TypeVar("_KeyType")
+_ValueType = typing.TypeVar("_ValueType")
+
+class _AppClientStateMethodsProtocol(typing.Protocol):
+    def get_map(self, map_name: str) -> dict[typing.Any, typing.Any]:
+        ...
+    def get_map_value(self, map_name: str, key: typing.Any) -> typing.Any | None:
+        ...
+
+class _MapState(typing.Generic[_KeyType, _ValueType]):
+    """Generic class for accessing state maps with strongly typed keys and values"""
+
+    def __init__(self, state_accessor: _AppClientStateMethodsProtocol, map_name: str,
+                struct_class: typing.Type[_ValueType] | None = None):
+        self._state_accessor = state_accessor
+        self._map_name = map_name
+        self._struct_class = struct_class
+
+    def get_map(self) -> dict[_KeyType, _ValueType]:
+        """Get all current values in the map"""
+        result = self._state_accessor.get_map(self._map_name)
+        if self._struct_class and result:
+            return {k: _init_dataclass(self._struct_class, v) if isinstance(v, dict) else v
+                    for k, v in result.items()}  # type: ignore
+        return typing.cast(dict[_KeyType, _ValueType], result or {})
+
+    def get_value(self, key: _KeyType) -> _ValueType | None:
+        """Get a value from the map by key"""
+        key_value = dataclasses.asdict(key) if dataclasses.is_dataclass(key) else key  # type: ignore
+        value = self._state_accessor.get_map_value(self._map_name, key_value)
+        if value is not None and self._struct_class and isinstance(value, dict):
+            return _init_dataclass(self._struct_class, value)  # type: ignore
+        return typing.cast(_ValueType | None, value)
+
 
 class MasterVestingClient:
     """Client for interacting with MasterVesting smart contract"""
@@ -313,9 +540,21 @@ class MasterVestingClient:
     @typing.overload
     def decode_return_value(
         self,
-        method: typing.Literal["hello(string)string"],
+        method: typing.Literal["register_vesting_contract(account)void"],
+        return_value: algokit_utils.ABIReturn | None
+    ) -> None: ...
+    @typing.overload
+    def decode_return_value(
+        self,
+        method: typing.Literal["get_vesting_contract(uint64)address"],
         return_value: algokit_utils.ABIReturn | None
     ) -> str | None: ...
+    @typing.overload
+    def decode_return_value(
+        self,
+        method: typing.Literal["opt_into_asset(asset)void"],
+        return_value: algokit_utils.ABIReturn | None
+    ) -> None: ...
     @typing.overload
     def decode_return_value(
         self,
@@ -498,20 +737,60 @@ class MasterVestingFactoryCreateParams:
             algokit_utils.AppFactoryCreateParams(**dataclasses.asdict(params)),
             compilation_params=compilation_params)
 
-    def hello(
+    def register_vesting_contract(
         self,
-        args: tuple[str] | HelloArgs,
+        args: tuple[str | bytes] | RegisterVestingContractArgs,
         *,
         params: algokit_utils.CommonAppCallCreateParams | None = None,
         compilation_params: algokit_utils.AppClientCompilationParams | None = None
     ) -> algokit_utils.AppCreateMethodCallParams:
-        """Creates a new instance using the hello(string)string ABI method"""
+        """Creates a new instance using the register_vesting_contract(account)void ABI method"""
         params = params or algokit_utils.CommonAppCallCreateParams()
         return self.app_factory.params.create(
             algokit_utils.AppFactoryCreateMethodCallParams(
                 **{
                 **dataclasses.asdict(params),
-                "method": "hello(string)string",
+                "method": "register_vesting_contract(account)void",
+                "args": _parse_abi_args(args),
+                }
+            ),
+            compilation_params=compilation_params
+        )
+
+    def get_vesting_contract(
+        self,
+        args: tuple[int] | GetVestingContractArgs,
+        *,
+        params: algokit_utils.CommonAppCallCreateParams | None = None,
+        compilation_params: algokit_utils.AppClientCompilationParams | None = None
+    ) -> algokit_utils.AppCreateMethodCallParams:
+        """Creates a new instance using the get_vesting_contract(uint64)address ABI method"""
+        params = params or algokit_utils.CommonAppCallCreateParams()
+        return self.app_factory.params.create(
+            algokit_utils.AppFactoryCreateMethodCallParams(
+                **{
+                **dataclasses.asdict(params),
+                "method": "get_vesting_contract(uint64)address",
+                "args": _parse_abi_args(args),
+                }
+            ),
+            compilation_params=compilation_params
+        )
+
+    def opt_into_asset(
+        self,
+        args: tuple[int] | OptIntoAssetArgs,
+        *,
+        params: algokit_utils.CommonAppCallCreateParams | None = None,
+        compilation_params: algokit_utils.AppClientCompilationParams | None = None
+    ) -> algokit_utils.AppCreateMethodCallParams:
+        """Creates a new instance using the opt_into_asset(asset)void ABI method"""
+        params = params or algokit_utils.CommonAppCallCreateParams()
+        return self.app_factory.params.create(
+            algokit_utils.AppFactoryCreateMethodCallParams(
+                **{
+                **dataclasses.asdict(params),
+                "method": "opt_into_asset(asset)void",
                 "args": _parse_abi_args(args),
                 }
             ),
@@ -619,20 +898,56 @@ class MasterVestingComposer:
         self._composer = client.algorand.new_group()
         self._result_mappers: list[typing.Callable[[algokit_utils.ABIReturn | None], object] | None] = []
 
-    def hello(
+    def register_vesting_contract(
         self,
-        args: tuple[str] | HelloArgs,
+        args: tuple[str | bytes] | RegisterVestingContractArgs,
         params: algokit_utils.CommonAppCallParams | None = None
     ) -> "MasterVestingComposer":
         self._composer.add_app_call_method_call(
-            self.client.params.hello(
+            self.client.params.register_vesting_contract(
                 args=args,
                 params=params,
             )
         )
         self._result_mappers.append(
             lambda v: self.client.decode_return_value(
-                "hello(string)string", v
+                "register_vesting_contract(account)void", v
+            )
+        )
+        return self
+
+    def get_vesting_contract(
+        self,
+        args: tuple[int] | GetVestingContractArgs,
+        params: algokit_utils.CommonAppCallParams | None = None
+    ) -> "MasterVestingComposer":
+        self._composer.add_app_call_method_call(
+            self.client.params.get_vesting_contract(
+                args=args,
+                params=params,
+            )
+        )
+        self._result_mappers.append(
+            lambda v: self.client.decode_return_value(
+                "get_vesting_contract(uint64)address", v
+            )
+        )
+        return self
+
+    def opt_into_asset(
+        self,
+        args: tuple[int] | OptIntoAssetArgs,
+        params: algokit_utils.CommonAppCallParams | None = None
+    ) -> "MasterVestingComposer":
+        self._composer.add_app_call_method_call(
+            self.client.params.opt_into_asset(
+                args=args,
+                params=params,
+            )
+        )
+        self._result_mappers.append(
+            lambda v: self.client.decode_return_value(
+                "opt_into_asset(asset)void", v
             )
         )
         return self

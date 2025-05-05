@@ -1,0 +1,501 @@
+#pragma version 10
+#pragma typetrack false
+
+// smart_contracts.master_vesting.contract.SizlandVestingContract.__algopy_entrypoint_with_init() -> uint64:
+main:
+    intcblock 0 1 4
+    bytecblock "asa" "master_contract" 0x0000000000000000
+    txn ApplicationID
+    bnz main_after_if_else@2
+    // smart_contracts/master_vesting/contract.py:60
+    // self.asa = Asset()
+    bytec_0 // "asa"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/master_vesting/contract.py:62
+    // self.master_contract = Account()  # Store the master contract address
+    bytec_1 // "master_contract"
+    global ZeroAddress
+    app_global_put
+
+main_after_if_else@2:
+    // smart_contracts/master_vesting/contract.py:58
+    // class SizlandVestingContract(ARC4Contract):
+    txn NumAppArgs
+    bz main_bare_routing@9
+    pushbytess 0x9a0b1d4f 0x2826b202 0x6e59b7ad 0xf1577726 // method "initialize(account,asset)void", method "opt_into_asset(asset)void", method "set_allocation(account,uint64,uint64,uint64,uint64)void", method "claim()void"
+    txna ApplicationArgs 0
+    match main_initialize_route@5 main_opt_into_asset_route@6 main_set_allocation_route@7 main_claim_route@8
+
+main_after_if_else@11:
+    // smart_contracts/master_vesting/contract.py:58
+    // class SizlandVestingContract(ARC4Contract):
+    intc_0 // 0
+    return
+
+main_claim_route@8:
+    // smart_contracts/master_vesting/contract.py:115
+    // @arc4.abimethod
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    callsub claim
+    intc_1 // 1
+    return
+
+main_set_allocation_route@7:
+    // smart_contracts/master_vesting/contract.py:94
+    // @arc4.abimethod
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/master_vesting/contract.py:58
+    // class SizlandVestingContract(ARC4Contract):
+    txna ApplicationArgs 1
+    btoi
+    txnas Accounts
+    txna ApplicationArgs 2
+    txna ApplicationArgs 3
+    txna ApplicationArgs 4
+    txna ApplicationArgs 5
+    // smart_contracts/master_vesting/contract.py:94
+    // @arc4.abimethod
+    callsub set_allocation
+    intc_1 // 1
+    return
+
+main_opt_into_asset_route@6:
+    // smart_contracts/master_vesting/contract.py:75
+    // @arc4.abimethod
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/master_vesting/contract.py:58
+    // class SizlandVestingContract(ARC4Contract):
+    txna ApplicationArgs 1
+    btoi
+    txnas Assets
+    // smart_contracts/master_vesting/contract.py:75
+    // @arc4.abimethod
+    callsub opt_into_asset
+    intc_1 // 1
+    return
+
+main_initialize_route@5:
+    // smart_contracts/master_vesting/contract.py:64
+    // @arc4.abimethod
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/master_vesting/contract.py:58
+    // class SizlandVestingContract(ARC4Contract):
+    txna ApplicationArgs 1
+    btoi
+    txnas Accounts
+    txna ApplicationArgs 2
+    btoi
+    txnas Assets
+    // smart_contracts/master_vesting/contract.py:64
+    // @arc4.abimethod
+    callsub initialize
+    intc_1 // 1
+    return
+
+main_bare_routing@9:
+    // smart_contracts/master_vesting/contract.py:58
+    // class SizlandVestingContract(ARC4Contract):
+    txn OnCompletion
+    bnz main_after_if_else@11
+    txn ApplicationID
+    !
+    assert // can only call when creating
+    intc_1 // 1
+    return
+
+
+// smart_contracts.master_vesting.contract.SizlandVestingContract.initialize(master: bytes, asset: uint64) -> void:
+initialize:
+    // smart_contracts/master_vesting/contract.py:64-65
+    // @arc4.abimethod
+    // def initialize(self, master: Account, asset: Asset) -> None:
+    proto 2 0
+    // smart_contracts/master_vesting/contract.py:66-67
+    // # Only creator can initialize
+    // assert Txn.sender == Global.creator_address, "Only creator can initialize"
+    txn Sender
+    global CreatorAddress
+    ==
+    assert // Only creator can initialize
+    // smart_contracts/master_vesting/contract.py:69-70
+    // # Set master contract
+    // self.master_contract = master
+    bytec_1 // "master_contract"
+    frame_dig -2
+    app_global_put
+    // smart_contracts/master_vesting/contract.py:72-73
+    // # Opt into asset
+    // self.opt_into_asset(asset)
+    frame_dig -1
+    callsub opt_into_asset
+    retsub
+
+
+// smart_contracts.master_vesting.contract.SizlandVestingContract.opt_into_asset(asset: uint64) -> void:
+opt_into_asset:
+    // smart_contracts/master_vesting/contract.py:75-76
+    // @arc4.abimethod
+    // def opt_into_asset(self, asset: Asset) -> None:
+    proto 1 0
+    // smart_contracts/master_vesting/contract.py:79
+    // Txn.sender == Global.creator_address or Txn.sender == self.master_contract
+    txn Sender
+    global CreatorAddress
+    ==
+    bnz opt_into_asset_bool_true@2
+    txn Sender
+    intc_0 // 0
+    bytec_1 // "master_contract"
+    app_global_get_ex
+    assert // check self.master_contract exists
+    ==
+    bz opt_into_asset_bool_false@3
+
+opt_into_asset_bool_true@2:
+    intc_1 // 1
+
+opt_into_asset_bool_merge@4:
+    // smart_contracts/master_vesting/contract.py:77-80
+    // # Only allow master contract or app creator to opt the app account into an ASA
+    // assert (
+    //     Txn.sender == Global.creator_address or Txn.sender == self.master_contract
+    // ), "Unauthorized"
+    assert // Unauthorized
+    // smart_contracts/master_vesting/contract.py:82-83
+    // # Verify an ASA hasn't already been opted into
+    // assert self.asa.id == 0, "ASA already opted in"
+    intc_0 // 0
+    bytec_0 // "asa"
+    app_global_get_ex
+    assert // check self.asa exists
+    !
+    assert // ASA already opted in
+    // smart_contracts/master_vesting/contract.py:85-86
+    // # Save ASA ID in global state
+    // self.asa = asset
+    bytec_0 // "asa"
+    frame_dig -1
+    app_global_put
+    // smart_contracts/master_vesting/contract.py:88-92
+    // # Submit opt-in transaction: 0 asset transfer to self
+    // itxn.AssetTransfer(
+    //     asset_receiver=Global.current_application_address,
+    //     xfer_asset=asset,
+    // ).submit()
+    itxn_begin
+    // smart_contracts/master_vesting/contract.py:90
+    // asset_receiver=Global.current_application_address,
+    global CurrentApplicationAddress
+    frame_dig -1
+    itxn_field XferAsset
+    itxn_field AssetReceiver
+    // smart_contracts/master_vesting/contract.py:88-89
+    // # Submit opt-in transaction: 0 asset transfer to self
+    // itxn.AssetTransfer(
+    intc_2 // axfer
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/master_vesting/contract.py:88-92
+    // # Submit opt-in transaction: 0 asset transfer to self
+    // itxn.AssetTransfer(
+    //     asset_receiver=Global.current_application_address,
+    //     xfer_asset=asset,
+    // ).submit()
+    itxn_submit
+    retsub
+
+opt_into_asset_bool_false@3:
+    intc_0 // 0
+    b opt_into_asset_bool_merge@4
+
+
+// smart_contracts.master_vesting.contract.SizlandVestingContract.set_allocation(beneficiary: bytes, total_allocation: bytes, start_time: bytes, cliff_time: bytes, vesting_period: bytes) -> void:
+set_allocation:
+    // smart_contracts/master_vesting/contract.py:94-102
+    // @arc4.abimethod
+    // def set_allocation(
+    //     self,
+    //     beneficiary: Account,
+    //     total_allocation: arc4.UInt64,
+    //     start_time: arc4.UInt64,
+    //     cliff_time: arc4.UInt64,
+    //     vesting_period: arc4.UInt64,
+    // ) -> None:
+    proto 5 0
+    // smart_contracts/master_vesting/contract.py:104
+    // Txn.sender == Global.creator_address
+    txn Sender
+    global CreatorAddress
+    ==
+    // smart_contracts/master_vesting/contract.py:103-105
+    // assert (
+    //     Txn.sender == Global.creator_address
+    // ), "Only the creator can call this method"
+    assert // Only the creator can call this method
+    // smart_contracts/master_vesting/contract.py:106-113
+    // self.allocations[beneficiary] = UserAllocation(
+    //     total_allocation=total_allocation,
+    //     claimed_amount=arc4.UInt64(0),
+    //     start_time=start_time,
+    //     cliff_time=cliff_time,
+    //     vesting_period=vesting_period,
+    //     last_claim_time=arc4.UInt64(0),
+    // )
+    frame_dig -4
+    // smart_contracts/master_vesting/contract.py:108
+    // claimed_amount=arc4.UInt64(0),
+    bytec_2 // 0x0000000000000000
+    // smart_contracts/master_vesting/contract.py:106-113
+    // self.allocations[beneficiary] = UserAllocation(
+    //     total_allocation=total_allocation,
+    //     claimed_amount=arc4.UInt64(0),
+    //     start_time=start_time,
+    //     cliff_time=cliff_time,
+    //     vesting_period=vesting_period,
+    //     last_claim_time=arc4.UInt64(0),
+    // )
+    concat
+    frame_dig -3
+    concat
+    frame_dig -2
+    concat
+    frame_dig -1
+    concat
+    // smart_contracts/master_vesting/contract.py:112
+    // last_claim_time=arc4.UInt64(0),
+    bytec_2 // 0x0000000000000000
+    // smart_contracts/master_vesting/contract.py:106-113
+    // self.allocations[beneficiary] = UserAllocation(
+    //     total_allocation=total_allocation,
+    //     claimed_amount=arc4.UInt64(0),
+    //     start_time=start_time,
+    //     cliff_time=cliff_time,
+    //     vesting_period=vesting_period,
+    //     last_claim_time=arc4.UInt64(0),
+    // )
+    concat
+    frame_dig -5
+    swap
+    box_put
+    retsub
+
+
+// smart_contracts.master_vesting.contract.SizlandVestingContract.claim() -> void:
+claim:
+    // smart_contracts/master_vesting/contract.py:115-116
+    // @arc4.abimethod
+    // def claim(self) -> None:
+    proto 0 0
+    // smart_contracts/master_vesting/contract.py:117
+    // sender = Txn.sender
+    txn Sender
+    // smart_contracts/master_vesting/contract.py:118
+    // current_time = Global.latest_timestamp
+    global LatestTimestamp
+    dup
+    // smart_contracts/master_vesting/contract.py:117
+    // sender = Txn.sender
+    txn Sender
+    // smart_contracts/master_vesting/contract.py:120-121
+    // # Check allocation exists
+    // assert sender in self.allocations, "No allocation found"
+    dup
+    box_len
+    bury 1
+    assert // No allocation found
+    // smart_contracts/master_vesting/contract.py:123-124
+    // # Copy and access struct fields
+    // allocation = self.allocations[sender].copy()
+    box_get
+    assert // check self.allocations entry exists
+    // smart_contracts/master_vesting/contract.py:126-127
+    // # Native conversions
+    // last_claim_time = allocation.last_claim_time.native
+    dup
+    pushint 40 // 40
+    extract_uint64
+    // smart_contracts/master_vesting/contract.py:128
+    // cliff_time = allocation.cliff_time.native
+    dig 1
+    pushint 24 // 24
+    extract_uint64
+    dup
+    cover 2
+    cover 4
+    // smart_contracts/master_vesting/contract.py:129
+    // start_time = allocation.start_time.native
+    dig 2
+    pushint 16 // 16
+    extract_uint64
+    dup
+    cover 4
+    cover 5
+    // smart_contracts/master_vesting/contract.py:130
+    // vesting_period = allocation.vesting_period.native
+    dig 2
+    pushint 32 // 32
+    extract_uint64
+    dup
+    cover 3
+    cover 6
+    // smart_contracts/master_vesting/contract.py:131
+    // claimed_amount = allocation.claimed_amount.native
+    dig 3
+    pushint 8 // 8
+    extract_uint64
+    cover 6
+    // smart_contracts/master_vesting/contract.py:132
+    // total_allocation = allocation.total_allocation.native
+    uncover 3
+    intc_0 // 0
+    extract_uint64
+    cover 5
+    // smart_contracts/master_vesting/contract.py:134-135
+    // # Enforce cliff and cooldown
+    // assert current_time >= cliff_time, "Cliff not reached"
+    dig 4
+    uncover 2
+    >=
+    assert // Cliff not reached
+    // smart_contracts/master_vesting/contract.py:136
+    // assert current_time - last_claim_time >= 10, "Wait before claiming again"
+    dig 3
+    swap
+    -
+    pushint 10 // 10
+    >=
+    assert // Wait before claiming again
+    // smart_contracts/master_vesting/contract.py:138-139
+    // # Compute vesting
+    // end_time = start_time + vesting_period
+    +
+    // smart_contracts/master_vesting/contract.py:140
+    // if current_time >= end_time:
+    >=
+    bz claim_else_body@2
+    frame_dig 6
+
+claim_after_if_else@3:
+    // smart_contracts/master_vesting/contract.py:146-147
+    // # Compute claimable amount
+    // claimable = vested - claimed_amount
+    frame_dig 5
+    dup
+    cover 2
+    -
+    // smart_contracts/master_vesting/contract.py:148
+    // assert claimable > 0, "Nothing to claim"
+    dup
+    assert // Nothing to claim
+    // smart_contracts/master_vesting/contract.py:150-153
+    // # Transfer ASA
+    // itxn.AssetTransfer(
+    //     asset_receiver=sender, asset_amount=claimable, xfer_asset=self.asa
+    // ).submit()
+    itxn_begin
+    // smart_contracts/master_vesting/contract.py:152
+    // asset_receiver=sender, asset_amount=claimable, xfer_asset=self.asa
+    intc_0 // 0
+    bytec_0 // "asa"
+    app_global_get_ex
+    assert // check self.asa exists
+    itxn_field XferAsset
+    dup
+    itxn_field AssetAmount
+    frame_dig 0
+    dup
+    cover 3
+    itxn_field AssetReceiver
+    // smart_contracts/master_vesting/contract.py:150-151
+    // # Transfer ASA
+    // itxn.AssetTransfer(
+    intc_2 // axfer
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/master_vesting/contract.py:150-153
+    // # Transfer ASA
+    // itxn.AssetTransfer(
+    //     asset_receiver=sender, asset_amount=claimable, xfer_asset=self.asa
+    // ).submit()
+    itxn_submit
+    // smart_contracts/master_vesting/contract.py:157
+    // total_allocation=arc4.UInt64(total_allocation),
+    frame_dig 6
+    itob
+    // smart_contracts/master_vesting/contract.py:158
+    // claimed_amount=arc4.UInt64(claimed_amount + claimable),
+    cover 2
+    +
+    itob
+    // smart_contracts/master_vesting/contract.py:159
+    // start_time=arc4.UInt64(start_time),
+    frame_dig 3
+    itob
+    // smart_contracts/master_vesting/contract.py:160
+    // cliff_time=arc4.UInt64(cliff_time),
+    frame_dig 2
+    itob
+    // smart_contracts/master_vesting/contract.py:161
+    // vesting_period=arc4.UInt64(vesting_period),
+    frame_dig 4
+    itob
+    // smart_contracts/master_vesting/contract.py:162
+    // last_claim_time=arc4.UInt64(current_time),
+    frame_dig 1
+    itob
+    // smart_contracts/master_vesting/contract.py:155-163
+    // # Update allocation in BoxMap
+    // self.allocations[sender] = UserAllocation(
+    //     total_allocation=arc4.UInt64(total_allocation),
+    //     claimed_amount=arc4.UInt64(claimed_amount + claimable),
+    //     start_time=arc4.UInt64(start_time),
+    //     cliff_time=arc4.UInt64(cliff_time),
+    //     vesting_period=arc4.UInt64(vesting_period),
+    //     last_claim_time=arc4.UInt64(current_time),
+    // )
+    uncover 5
+    uncover 5
+    concat
+    uncover 4
+    concat
+    uncover 3
+    concat
+    uncover 2
+    concat
+    swap
+    concat
+    box_put
+    retsub
+
+claim_else_body@2:
+    // smart_contracts/master_vesting/contract.py:143
+    // elapsed = current_time - start_time
+    frame_dig 1
+    frame_dig 3
+    -
+    // smart_contracts/master_vesting/contract.py:144
+    // vested = (total_allocation * elapsed) // vesting_period
+    frame_dig 6
+    *
+    frame_dig 4
+    /
+    b claim_after_if_else@3
